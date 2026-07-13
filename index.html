@@ -9,6 +9,78 @@
   <link rel="icon" href="./favicon.svg" type="image/svg+xml">
   <link rel="manifest" href="./manifest.webmanifest">
   <link rel="stylesheet" href="./styles.css">
+
+  <style>
+    .exam-timing-status {
+      margin: 0 0 1rem;
+      padding: .8rem 1rem;
+      border: 1px solid rgba(70, 180, 255, .38);
+      border-radius: .75rem;
+      background: rgba(20, 92, 140, .12);
+      display: flex;
+      gap: .5rem 1rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .exam-timing-status.hidden { display: none; }
+    .exam-timing-status strong { color: #8dd7ff; }
+    .exam-timing-status span { color: var(--muted, #aeb9c6); }
+    .quiz-timer.timer-warning {
+      color: #ffd166;
+      border-color: rgba(255, 209, 102, .55);
+      animation: timerPulse 1.5s ease-in-out infinite;
+    }
+    .quiz-timer.timer-critical {
+      color: #ff6b6b;
+      border-color: rgba(255, 107, 107, .75);
+      animation: timerPulse .75s ease-in-out infinite;
+    }
+    .quiz-app.exam-locked {
+      position: relative;
+    }
+    .quiz-app.exam-locked .question-card,
+    .quiz-app.exam-locked .question-navigator,
+    .quiz-app.exam-locked .quiz-controls {
+      pointer-events: none;
+      opacity: .72;
+      filter: grayscale(.15);
+    }
+    .quiz-app.exam-locked::after {
+      content: "Exam submitted";
+      position: absolute;
+      inset: .75rem .75rem auto auto;
+      padding: .45rem .7rem;
+      border-radius: 999px;
+      background: #7f1d1d;
+      color: #fff;
+      font-weight: 800;
+      letter-spacing: .02em;
+      z-index: 3;
+    }
+    .timeout-dialog {
+      max-width: 28rem;
+      width: calc(100% - 2rem);
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 1rem;
+      background: #0b1726;
+      color: #f5f8fc;
+      padding: 0;
+      box-shadow: 0 24px 90px rgba(0,0,0,.55);
+    }
+    .timeout-dialog::backdrop { background: rgba(0,0,0,.72); }
+    .timeout-dialog-shell {
+      padding: 2rem;
+      text-align: center;
+    }
+    .timeout-dialog-shell h2 { margin: .5rem 0; }
+    .timeout-dialog-shell p { color: #b9c5d3; margin: 0 0 1.25rem; }
+    .timeout-icon { font-size: 2.5rem; }
+    @keyframes timerPulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.035); }
+    }
+  </style>
+
 </head>
 <body>
   <a class="skip-link" href="#main-content">Skip to study content</a>
@@ -175,7 +247,7 @@
           <article class="mode-card danger-card">
             <span class="mode-tag">Exam simulation</span>
             <h3>Full mock exam</h3>
-            <p>Sixty weighted questions with an accurate 57-minute countdown.</p>
+            <p>Sixty weighted questions with a strict 57-minute countdown. The exam automatically submits and locks when time expires.</p>
             <div class="mode-meta"><span>60 questions</span><span>57 minutes</span></div>
             <button class="button danger quiz-start" type="button" data-mode="mock">Start full mock</button>
           </article>
@@ -189,6 +261,10 @@
             </div>
             <div class="quiz-timer hidden" id="quiz-timer" aria-label="Time remaining">57:00</div>
             <button class="text-button" id="exit-quiz" type="button">Exit</button>
+          </div>
+          <div class="exam-timing-status hidden" id="exam-timing-status" role="status" aria-live="polite">
+            <strong id="exam-timing-message">Timed exam active</strong>
+            <span>Your answers are saved locally. At 00:00, the exam submits automatically and answer controls lock.</span>
           </div>
           <div class="quiz-progress"><span id="quiz-progress-bar"></span></div>
           <div class="quiz-layout">
@@ -260,9 +336,277 @@
     </div>
   </dialog>
 
+  <dialog class="timeout-dialog" id="timeout-dialog" aria-labelledby="timeout-title">
+    <div class="timeout-dialog-shell">
+      <span class="timeout-icon" aria-hidden="true">⏱</span>
+      <h2 id="timeout-title">Time expired</h2>
+      <p>Your mock exam was automatically submitted. Answers are now locked.</p>
+      <button class="button primary" id="timeout-results-button" type="button">View results</button>
+    </div>
+  </dialog>
+
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
   <script src="./data.js"></script>
   <script src="./app.js"></script>
+
+  <script>
+  (() => {
+    "use strict";
+
+    const STORAGE_KEY = "splunkExamHub.mockSession.v1";
+    const MOCK_SECONDS = 57 * 60;
+    const WARNING_POINTS = new Set([15 * 60, 5 * 60, 60]);
+    let intervalId = null;
+    let deadline = 0;
+    let submitted = false;
+    let warningHistory = new Set();
+
+    const byId = (id) => document.getElementById(id);
+    const getTimer = () => byId("quiz-timer");
+    const getQuizApp = () => byId("quiz-app");
+    const getStatus = () => byId("exam-timing-status");
+
+    function readSession() {
+      try {
+        return JSON.parse(localStorage.getItem(STORAGE_KEY) || "null");
+      } catch {
+        return null;
+      }
+    }
+
+    function writeSession(extra = {}) {
+      const current = readSession() || {};
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({
+        ...current,
+        mode: "mock",
+        deadline,
+        submitted,
+        savedAt: Date.now(),
+        ...extra
+      }));
+    }
+
+    function clearSession() {
+      localStorage.removeItem(STORAGE_KEY);
+    }
+
+    function formatTime(totalSeconds) {
+      const safe = Math.max(0, totalSeconds);
+      const minutes = Math.floor(safe / 60);
+      const seconds = safe % 60;
+      return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+    }
+
+    function showToast(message) {
+      const toast = byId("toast");
+      if (!toast) return;
+      toast.textContent = message;
+      toast.classList.add("show");
+      window.setTimeout(() => toast.classList.remove("show"), 4200);
+    }
+
+    function setTimedUi(active) {
+      const timer = getTimer();
+      const status = getStatus();
+      if (timer) timer.classList.toggle("hidden", !active);
+      if (status) status.classList.toggle("hidden", !active);
+    }
+
+    function saveAnswersSnapshot() {
+      const answers = {};
+      document.querySelectorAll("#quiz-app input[type='radio'], #quiz-app input[type='checkbox']").forEach((input) => {
+        const key = input.name || input.id;
+        if (!key) return;
+        if (input.type === "checkbox") {
+          answers[key] ||= [];
+          if (input.checked) answers[key].push(input.value);
+        } else if (input.checked) {
+          answers[key] = input.value;
+        }
+      });
+      writeSession({
+        answers,
+        progressLabel: byId("quiz-progress-label")?.textContent || "",
+        timerText: getTimer()?.textContent || ""
+      });
+    }
+
+    function restoreAnswersSnapshot(session) {
+      if (!session?.answers) return;
+      document.querySelectorAll("#quiz-app input[type='radio'], #quiz-app input[type='checkbox']").forEach((input) => {
+        const key = input.name || input.id;
+        const saved = session.answers[key];
+        if (Array.isArray(saved)) input.checked = saved.includes(input.value);
+        else if (saved !== undefined) input.checked = saved === input.value;
+      });
+    }
+
+    function lockExam() {
+      const app = getQuizApp();
+      if (app) app.classList.add("exam-locked");
+      document.querySelectorAll("#quiz-app input, #quiz-app select, #quiz-app textarea").forEach((el) => {
+        el.disabled = true;
+      });
+      document.querySelectorAll("#quiz-app button").forEach((el) => {
+        if (el.id !== "exit-quiz") el.disabled = true;
+      });
+    }
+
+    function submitUsingExistingApp() {
+      const submitButton = byId("submit-quiz");
+      if (submitButton) {
+        submitButton.classList.remove("hidden");
+        submitButton.disabled = false;
+        submitButton.click();
+        return true;
+      }
+      if (typeof window.submitQuiz === "function") {
+        window.submitQuiz({ timedOut: true, automatic: true });
+        return true;
+      }
+      document.dispatchEvent(new CustomEvent("splunk-exam-timeout-submit", {
+        detail: { timedOut: true, automatic: true }
+      }));
+      return false;
+    }
+
+    function showTimeoutDialog() {
+      const dialog = byId("timeout-dialog");
+      if (!dialog) return;
+      if (typeof dialog.showModal === "function" && !dialog.open) dialog.showModal();
+      else dialog.setAttribute("open", "");
+    }
+
+    function finishForTimeout() {
+      if (submitted) return;
+      submitted = true;
+      window.clearInterval(intervalId);
+      intervalId = null;
+      saveAnswersSnapshot();
+      writeSession({ submitted: true, timedOut: true, finishedAt: Date.now() });
+      lockExam();
+      const timer = getTimer();
+      if (timer) timer.textContent = "00:00";
+      const statusMessage = byId("exam-timing-message");
+      if (statusMessage) statusMessage.textContent = "Time expired — exam automatically submitted";
+      submitUsingExistingApp();
+      showTimeoutDialog();
+    }
+
+    function warnAt(remaining) {
+      if (!WARNING_POINTS.has(remaining) || warningHistory.has(remaining)) return;
+      warningHistory.add(remaining);
+      if (remaining === 900) showToast("15 minutes remaining.");
+      if (remaining === 300) showToast("5 minutes remaining.");
+      if (remaining === 60) showToast("1 minute remaining. The exam will auto-submit at 00:00.");
+    }
+
+    function tick() {
+      const timer = getTimer();
+      if (!timer || !deadline) return;
+      const remaining = Math.max(0, Math.ceil((deadline - Date.now()) / 1000));
+      timer.textContent = formatTime(remaining);
+      timer.classList.toggle("timer-warning", remaining <= 300 && remaining > 60);
+      timer.classList.toggle("timer-critical", remaining <= 60);
+      timer.setAttribute("aria-label", `${Math.floor(remaining / 60)} minutes ${remaining % 60} seconds remaining`);
+      warnAt(remaining);
+      if (remaining <= 0) finishForTimeout();
+      else if (remaining % 5 === 0) saveAnswersSnapshot();
+    }
+
+    function startMockTimer({ resume = false } = {}) {
+      submitted = false;
+      warningHistory = new Set();
+      setTimedUi(true);
+
+      const existing = readSession();
+      if (resume && existing?.deadline && !existing.submitted) {
+        deadline = Number(existing.deadline);
+      } else {
+        deadline = Date.now() + MOCK_SECONDS * 1000;
+        writeSession({ startedAt: Date.now(), timedOut: false, answers: {} });
+      }
+
+      window.clearInterval(intervalId);
+      tick();
+      intervalId = window.setInterval(tick, 1000);
+    }
+
+    function confirmExit(event) {
+      if (!intervalId || submitted) return;
+      const leave = window.confirm("Leaving will submit and permanently end this timed mock attempt. Continue?");
+      if (!leave) {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        return;
+      }
+      saveAnswersSnapshot();
+      submitted = true;
+      writeSession({ submitted: true, exitedEarly: true, finishedAt: Date.now() });
+      submitUsingExistingApp();
+      window.clearInterval(intervalId);
+      intervalId = null;
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      document.querySelectorAll(".quiz-start[data-mode='mock']").forEach((button) => {
+        button.addEventListener("click", () => {
+          window.setTimeout(() => startMockTimer(), 0);
+        });
+      });
+
+      byId("exit-quiz")?.addEventListener("click", confirmExit, true);
+
+      byId("submit-quiz")?.addEventListener("click", () => {
+        if (!intervalId || submitted) return;
+        submitted = true;
+        saveAnswersSnapshot();
+        writeSession({ submitted: true, finishedAt: Date.now(), timedOut: false });
+        window.clearInterval(intervalId);
+        intervalId = null;
+      }, true);
+
+      byId("quiz-app")?.addEventListener("change", () => {
+        if (intervalId && !submitted) saveAnswersSnapshot();
+      });
+
+      byId("timeout-results-button")?.addEventListener("click", () => {
+        const dialog = byId("timeout-dialog");
+        if (dialog?.open) dialog.close();
+        byId("quiz-results")?.scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+
+      const session = readSession();
+      if (session?.mode === "mock" && !session.submitted && session.deadline) {
+        if (Date.now() >= Number(session.deadline)) {
+          deadline = Number(session.deadline);
+          setTimedUi(true);
+          finishForTimeout();
+        } else {
+          const resume = window.confirm("A timed mock exam is still in progress. Resume it now?");
+          if (resume) {
+            startMockTimer({ resume: true });
+            window.setTimeout(() => restoreAnswersSnapshot(session), 300);
+          } else {
+            clearSession();
+          }
+        }
+      }
+    });
+
+    window.addEventListener("beforeunload", (event) => {
+      if (!intervalId || submitted) return;
+      saveAnswersSnapshot();
+      event.preventDefault();
+      event.returnValue = "";
+    });
+
+    document.addEventListener("visibilitychange", () => {
+      if (!document.hidden && intervalId && !submitted) tick();
+    });
+  })();
+  </script>
+
 </body>
 </html>
