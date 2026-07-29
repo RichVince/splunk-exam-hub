@@ -312,6 +312,734 @@ window.SPLUNK_HUB_DATA = {
     "I reviewed every missed or guessed question by explaining why each wrong option is wrong."
   ],
 
+  mock2Questions: [
+  {
+    "id": 201,
+    "domain": "basics",
+    "q": "Which Splunk component provides the primary interface for users to run searches and view dashboards?",
+    "options": [
+      "Indexer",
+      "Search head",
+      "Universal forwarder",
+      "Deployment server"
+    ],
+    "answer": 1,
+    "explanation": "The search head provides the user interface, dispatches searches to indexers, and presents reports and dashboards.",
+    "whyWrong": [
+      "An indexer stores and searches indexed data but is not the primary user interface.",
+      "",
+      "A universal forwarder collects and sends data; it does not provide the normal search interface.",
+      "A deployment server distributes apps and configuration to deployment clients."
+    ],
+    "tip": "Search and presentation = search head. Storage and indexing = indexer.",
+    "difficulty": "easy",
+    "tags": [
+      "architecture",
+      "search head"
+    ]
+  },
+  {
+    "id": 202,
+    "domain": "basics",
+    "q": "What is the main purpose of a Splunk index?",
+    "options": [
+      "To group users by role",
+      "To store searchable machine data",
+      "To define dashboard colors",
+      "To schedule forwarder upgrades"
+    ],
+    "answer": 1,
+    "explanation": "An index is the repository where Splunk stores processed, searchable event data.",
+    "whyWrong": [
+      "Roles control permissions, not data storage.",
+      "",
+      "Dashboard appearance is unrelated to indexes.",
+      "Forwarder management is separate from the purpose of an index."
+    ],
+    "tip": "Think of an index as the searchable home for events.",
+    "difficulty": "easy",
+    "tags": [
+      "index",
+      "data storage"
+    ]
+  },
+  {
+    "id": 203,
+    "domain": "searching",
+    "q": "Which search returns events containing either error or warning?",
+    "options": [
+      "index=main error warning",
+      "index=main error AND warning",
+      "index=main error OR warning",
+      "index=main error NOT warning"
+    ],
+    "answer": 2,
+    "explanation": "Uppercase OR returns events that match either term.",
+    "whyWrong": [
+      "A space implies AND, so both terms would be required.",
+      "This explicitly requires both terms.",
+      "",
+      "NOT excludes warning events."
+    ],
+    "tip": "Use uppercase Boolean operators in SPL to make intent unambiguous.",
+    "difficulty": "easy",
+    "tags": [
+      "Boolean",
+      "OR"
+    ]
+  },
+  {
+    "id": 204,
+    "domain": "searching",
+    "q": "Which time modifier searches from the beginning of today through the present?",
+    "options": [
+      "earliest=-24h latest=now",
+      "earliest=@d latest=now",
+      "earliest=-1d@d latest=@d",
+      "earliest=now latest=@d"
+    ],
+    "answer": 1,
+    "explanation": "@d snaps earliest to the start of the current day, while latest=now ends at the present moment.",
+    "whyWrong": [
+      "The last 24 hours is not necessarily the same as today.",
+      "",
+      "This searches the previous calendar day.",
+      "The time order is reversed and does not represent today through now."
+    ],
+    "tip": "@d means the beginning of the current day.",
+    "difficulty": "medium",
+    "tags": [
+      "time",
+      "snap-to"
+    ]
+  },
+  {
+    "id": 205,
+    "domain": "searching",
+    "q": "What happens when you click a segment of the event timeline in Search & Reporting?",
+    "options": [
+      "Splunk deletes events outside the segment",
+      "The search time range is narrowed to that segment",
+      "A report is scheduled automatically",
+      "The selected events are exported"
+    ],
+    "answer": 1,
+    "explanation": "Selecting a timeline segment zooms the search to that period by adjusting the time range.",
+    "whyWrong": [
+      "Search actions do not delete indexed events.",
+      "",
+      "Scheduling requires saving and configuring a report or alert.",
+      "Exporting requires an explicit export action."
+    ],
+    "tip": "Timeline interaction changes the search window, not stored data.",
+    "difficulty": "easy",
+    "tags": [
+      "timeline",
+      "time picker"
+    ]
+  },
+  {
+    "id": 206,
+    "domain": "searching",
+    "q": "Which search is generally the most efficient starting point?",
+    "options": [
+      "error",
+      "*",
+      "index=security sourcetype=WinEventLog:Security",
+      "All time | search failure"
+    ],
+    "answer": 2,
+    "explanation": "Starting with indexed metadata such as index and sourcetype narrows the search early and efficiently.",
+    "whyWrong": [
+      "A bare keyword may search broadly across the default indexes.",
+      "A wildcard by itself is extremely broad.",
+      "",
+      "All time is broad, and the pipeline filter occurs later."
+    ],
+    "tip": "Constrain by index, sourcetype, host, source, and time as early as possible.",
+    "difficulty": "medium",
+    "tags": [
+      "search optimization",
+      "metadata"
+    ]
+  },
+  {
+    "id": 207,
+    "domain": "fields",
+    "q": "Which default field contains the original event text?",
+    "options": [
+      "_time",
+      "_raw",
+      "source",
+      "host"
+    ],
+    "answer": 1,
+    "explanation": "_raw contains the event's original raw text as displayed in search results.",
+    "whyWrong": [
+      "_time stores the event timestamp.",
+      "",
+      "source identifies where the data came from.",
+      "host identifies the originating machine or device."
+    ],
+    "tip": "_raw = raw event text; _time = event timestamp.",
+    "difficulty": "easy",
+    "tags": [
+      "_raw",
+      "metadata"
+    ]
+  },
+  {
+    "id": 208,
+    "domain": "fields",
+    "q": "What does the source field normally identify?",
+    "options": [
+      "The data format classification",
+      "The user who created the event",
+      "The input origin such as a file path or network input",
+      "The index that stores the event"
+    ],
+    "answer": 2,
+    "explanation": "source identifies the specific input origin, such as a file path, script, or network input.",
+    "whyWrong": [
+      "sourcetype classifies the data format.",
+      "User identity is usually stored in a user-related field.",
+      "",
+      "index identifies the storage destination."
+    ],
+    "tip": "source = where it came from; sourcetype = what kind of data it is.",
+    "difficulty": "easy",
+    "tags": [
+      "source",
+      "sourcetype"
+    ]
+  },
+  {
+    "id": 209,
+    "domain": "fields",
+    "q": "Which command removes _raw from the fields passed to later commands?",
+    "options": [
+      "| fields _raw",
+      "| fields - _raw",
+      "| table - _raw",
+      "| delete _raw"
+    ],
+    "answer": 1,
+    "explanation": "The minus form of fields excludes the named field from subsequent results.",
+    "whyWrong": [
+      "This keeps _raw rather than removing it.",
+      "",
+      "table does not use a minus sign this way.",
+      "delete is not the command for removing a field from search results."
+    ],
+    "tip": "fields field1 field2 keeps fields; fields - field1 removes fields.",
+    "difficulty": "easy",
+    "tags": [
+      "fields",
+      "field removal"
+    ]
+  },
+  {
+    "id": 210,
+    "domain": "fields",
+    "q": "What is an interesting field in the Splunk fields sidebar?",
+    "options": [
+      "A field manually pinned by the user",
+      "A field that appears frequently enough in the current result set",
+      "A field stored only at index time",
+      "A field that contains numeric values only"
+    ],
+    "answer": 1,
+    "explanation": "Splunk identifies interesting fields based on their prevalence in the current search results.",
+    "whyWrong": [
+      "Manually pinned fields are selected fields.",
+      "",
+      "Interesting fields are not defined solely by index-time extraction.",
+      "They can contain text, numbers, or other values."
+    ],
+    "tip": "Selected fields are chosen by you; interesting fields are surfaced by Splunk.",
+    "difficulty": "medium",
+    "tags": [
+      "fields sidebar",
+      "interesting fields"
+    ]
+  },
+  {
+    "id": 211,
+    "domain": "language",
+    "q": "What is the purpose of the pipe character in SPL?",
+    "options": [
+      "It joins two indexes permanently",
+      "It sends the current results to the next command",
+      "It creates a lookup definition",
+      "It marks a comment"
+    ],
+    "answer": 1,
+    "explanation": "The pipe passes the current result set into the next command in the search pipeline.",
+    "whyWrong": [
+      "Indexes are not joined permanently by a pipe.",
+      "",
+      "Lookup definitions are created through settings or configuration.",
+      "The pipe is not the SPL comment marker."
+    ],
+    "tip": "Read SPL left to right: each command receives what the previous command produced.",
+    "difficulty": "easy",
+    "tags": [
+      "pipe",
+      "pipeline"
+    ]
+  },
+  {
+    "id": 212,
+    "domain": "language",
+    "q": "Which search keeps the newest event for each user?",
+    "options": [
+      "index=main | dedup user | sort - _time",
+      "index=main | sort - _time | dedup user",
+      "index=main | sort user | head 1",
+      "index=main | table user _time"
+    ],
+    "answer": 1,
+    "explanation": "Sorting newest first and then deduplicating by user keeps the first, newest event for each user.",
+    "whyWrong": [
+      "Dedup occurs before the sort, so the retained event is not explicitly controlled.",
+      "",
+      "This returns only one event overall after sorting by user.",
+      "table changes presentation but does not deduplicate."
+    ],
+    "tip": "Control order before dedup when the retained record matters.",
+    "difficulty": "medium",
+    "tags": [
+      "sort",
+      "dedup"
+    ]
+  },
+  {
+    "id": 213,
+    "domain": "language",
+    "q": "Which command changes a field label only in the current search results?",
+    "options": [
+      "rename",
+      "replace",
+      "lookup",
+      "convert"
+    ],
+    "answer": 0,
+    "explanation": "rename changes a field name in the current result set, commonly using AS.",
+    "whyWrong": [
+      "",
+      "replace changes field values, not the field name itself.",
+      "lookup enriches events using external data.",
+      "convert changes field data types or formats."
+    ],
+    "tip": "rename host AS system changes presentation, not indexed data.",
+    "difficulty": "easy",
+    "tags": [
+      "rename",
+      "fields"
+    ]
+  },
+  {
+    "id": 214,
+    "domain": "language",
+    "q": "Why is table usually placed near the end of an SPL pipeline?",
+    "options": [
+      "It automatically speeds every search",
+      "It limits the fields available to later commands",
+      "It writes results back to the index",
+      "It changes the search time range"
+    ],
+    "answer": 1,
+    "explanation": "table retains only the listed fields, so later commands cannot use fields that table removed.",
+    "whyWrong": [
+      "It is mainly a presentation command and does not guarantee universal performance gains.",
+      "",
+      "table does not modify indexed data.",
+      "It does not control time."
+    ],
+    "tip": "Do not remove fields before later commands need them.",
+    "difficulty": "medium",
+    "tags": [
+      "table",
+      "command order"
+    ]
+  },
+  {
+    "id": 215,
+    "domain": "transforming",
+    "q": "Which command returns the most common values of a field with count and percent?",
+    "options": [
+      "rare",
+      "top",
+      "stats dc(field)",
+      "dedup"
+    ],
+    "answer": 1,
+    "explanation": "top ranks the most frequent field values and normally includes count and percent.",
+    "whyWrong": [
+      "rare returns the least common values.",
+      "",
+      "dc counts distinct values but does not rank the values themselves.",
+      "dedup removes duplicate values rather than ranking them."
+    ],
+    "tip": "top = most common; rare = least common.",
+    "difficulty": "easy",
+    "tags": [
+      "top",
+      "transforming"
+    ]
+  },
+  {
+    "id": 216,
+    "domain": "transforming",
+    "q": "What does dc(user) calculate?",
+    "options": [
+      "The total number of events",
+      "The number of distinct user values",
+      "The average number of users",
+      "The most common user"
+    ],
+    "answer": 1,
+    "explanation": "dc stands for distinct count and returns the number of unique values in the specified field.",
+    "whyWrong": [
+      "count measures events or non-null values.",
+      "",
+      "avg requires a numeric field.",
+      "top is used to find the most common values."
+    ],
+    "tip": "dc = distinct count, not total event count.",
+    "difficulty": "easy",
+    "tags": [
+      "stats",
+      "dc"
+    ]
+  },
+  {
+    "id": 217,
+    "domain": "transforming",
+    "q": "What does BY status do in `| stats count BY status`?",
+    "options": [
+      "Filters out the status field",
+      "Creates one result row for each distinct status value",
+      "Renames count to status",
+      "Sorts statuses alphabetically"
+    ],
+    "answer": 1,
+    "explanation": "BY groups the aggregation so Splunk returns a separate count for each distinct status value.",
+    "whyWrong": [
+      "The field is used for grouping, not removed.",
+      "",
+      "AS performs renaming.",
+      "Grouping does not inherently guarantee a specific sort order."
+    ],
+    "tip": "BY answers 'for each value of this field.'",
+    "difficulty": "easy",
+    "tags": [
+      "stats",
+      "BY"
+    ]
+  },
+  {
+    "id": 218,
+    "domain": "transforming",
+    "q": "After `| stats count BY host`, which fields are guaranteed in the output?",
+    "options": [
+      "All original fields",
+      "Only _raw and _time",
+      "host and count",
+      "source, sourcetype, and host"
+    ],
+    "answer": 2,
+    "explanation": "A transforming stats command returns the grouping field host and the calculated field count.",
+    "whyWrong": [
+      "Transforming commands do not preserve every original event field.",
+      "_raw and _time are not automatically retained here.",
+      "",
+      "source and sourcetype were not grouping or calculated fields."
+    ],
+    "tip": "After stats, expect only group-by fields and calculated fields.",
+    "difficulty": "medium",
+    "tags": [
+      "stats",
+      "transforming output"
+    ]
+  },
+  {
+    "id": 219,
+    "domain": "reports",
+    "q": "What is a Splunk report?",
+    "options": [
+      "A saved search that can be rerun and optionally scheduled",
+      "A collection of dashboard panels only",
+      "A raw data input",
+      "A user role"
+    ],
+    "answer": 0,
+    "explanation": "A report is a saved search that can be rerun, shared according to permissions, visualized, and optionally scheduled.",
+    "whyWrong": [
+      "",
+      "A dashboard contains panels and may use reports, but it is not itself a report.",
+      "A data input brings data into Splunk.",
+      "A role controls permissions."
+    ],
+    "tip": "Report = saved search. Dashboard = view containing panels.",
+    "difficulty": "easy",
+    "tags": [
+      "reports",
+      "saved search"
+    ]
+  },
+  {
+    "id": 220,
+    "domain": "reports",
+    "q": "Which visualization is usually best for showing event volume over time?",
+    "options": [
+      "Single value",
+      "Line chart",
+      "Pie chart",
+      "Scatter plot"
+    ],
+    "answer": 1,
+    "explanation": "A line chart clearly shows change and trends over a time axis.",
+    "whyWrong": [
+      "A single value hides the trend.",
+      "",
+      "Pie charts show parts of a whole, not time progression.",
+      "Scatter plots are usually for relationships between numeric variables."
+    ],
+    "tip": "Time trend = timechart plus line or column visualization.",
+    "difficulty": "easy",
+    "tags": [
+      "visualization",
+      "timechart"
+    ]
+  },
+  {
+    "id": 221,
+    "domain": "reports",
+    "q": "What is a dashboard panel?",
+    "options": [
+      "A physical Splunk server",
+      "A dashboard element powered by a search or report",
+      "A type of index",
+      "A forwarder configuration file"
+    ],
+    "answer": 1,
+    "explanation": "A panel is an individual dashboard element backed by an inline search or saved report.",
+    "whyWrong": [
+      "It is a user-interface element, not a server.",
+      "",
+      "Indexes store searchable data.",
+      "Forwarder configuration files are unrelated to dashboard panels."
+    ],
+    "tip": "A dashboard is the container; panels are the individual visual elements.",
+    "difficulty": "easy",
+    "tags": [
+      "dashboards",
+      "panels"
+    ]
+  },
+  {
+    "id": 222,
+    "domain": "lookups",
+    "q": "What does a lookup commonly add to search results?",
+    "options": [
+      "External contextual fields matched by a key",
+      "A new indexer",
+      "A permanent copy of every event",
+      "A new user role"
+    ],
+    "answer": 0,
+    "explanation": "A lookup matches event field values to external data and adds contextual fields to the search results.",
+    "whyWrong": [
+      "",
+      "Lookups do not deploy Splunk infrastructure.",
+      "They enrich results; they do not duplicate every event permanently.",
+      "Roles are managed separately."
+    ],
+    "tip": "Lookups enrich events with context such as owner, department, or asset criticality.",
+    "difficulty": "easy",
+    "tags": [
+      "lookup",
+      "enrichment"
+    ]
+  },
+  {
+    "id": 223,
+    "domain": "lookups",
+    "q": "In `| lookup assets.csv ip OUTPUT owner`, what is ip used for?",
+    "options": [
+      "The output field only",
+      "The matching key between events and the lookup",
+      "The name of a dashboard",
+      "The index name"
+    ],
+    "answer": 1,
+    "explanation": "The ip field is used to match event values to rows in the lookup table; owner is then returned.",
+    "whyWrong": [
+      "owner is the output field in this example.",
+      "",
+      "The command does not define a dashboard.",
+      "The index is specified in the base search, not here."
+    ],
+    "tip": "Fields before OUTPUT are match keys; fields after OUTPUT are returned.",
+    "difficulty": "medium",
+    "tags": [
+      "lookup syntax",
+      "OUTPUT"
+    ]
+  },
+  {
+    "id": 224,
+    "domain": "lookups",
+    "q": "What is an automatic lookup?",
+    "options": [
+      "A lookup that runs only when a user types the lookup command",
+      "A configured lookup that enriches matching events automatically at search time",
+      "A CSV file copied into every index bucket",
+      "A scheduled alert action"
+    ],
+    "answer": 1,
+    "explanation": "An automatic lookup is configured to apply at search time without requiring the user to type the lookup command.",
+    "whyWrong": [
+      "That describes a manual lookup invocation.",
+      "",
+      "Lookup files are not copied into every bucket.",
+      "An alert action is unrelated to automatic lookup enrichment."
+    ],
+    "tip": "Automatic lookups apply transparently at search time.",
+    "difficulty": "medium",
+    "tags": [
+      "automatic lookup",
+      "knowledge objects"
+    ]
+  },
+  {
+    "id": 225,
+    "domain": "alerts",
+    "q": "What distinguishes an alert from a scheduled report?",
+    "options": [
+      "Only alerts can run searches",
+      "An alert evaluates a trigger condition and can perform an action",
+      "Scheduled reports always run in real time",
+      "Alerts cannot be scheduled"
+    ],
+    "answer": 1,
+    "explanation": "An alert runs a search, evaluates trigger criteria, and can perform actions such as sending a notification.",
+    "whyWrong": [
+      "Both alerts and scheduled reports run searches.",
+      "",
+      "Scheduled reports commonly run on schedules, not necessarily in real time.",
+      "Alerts can be scheduled or configured as real-time alerts."
+    ],
+    "tip": "Report delivers results; alert reacts to a condition.",
+    "difficulty": "easy",
+    "tags": [
+      "alerts",
+      "scheduled reports"
+    ]
+  },
+  {
+    "id": 226,
+    "domain": "alerts",
+    "q": "Why is alert throttling used?",
+    "options": [
+      "To delete duplicate indexed events",
+      "To suppress repeated alert actions for a defined period",
+      "To make every alert real time",
+      "To increase the number of notifications"
+    ],
+    "answer": 1,
+    "explanation": "Throttling prevents repeated notifications or actions for the same condition during a defined suppression window.",
+    "whyWrong": [
+      "Throttling affects alert actions, not stored events.",
+      "",
+      "It does not change an alert into a real-time alert.",
+      "Its purpose is to reduce duplicate noise, not increase it."
+    ],
+    "tip": "Throttle = suppress repeat notifications and reduce alert fatigue.",
+    "difficulty": "easy",
+    "tags": [
+      "alerts",
+      "throttling"
+    ]
+  },
+  {
+    "id": 227,
+    "domain": "alerts",
+    "q": "A scheduled alert should notify only when failed logins exceed 20. What must be configured?",
+    "options": [
+      "A trigger condition based on the result count",
+      "A new sourcetype",
+      "A dashboard token",
+      "An automatic lookup"
+    ],
+    "answer": 0,
+    "explanation": "The alert needs a trigger condition that evaluates whether the search result count exceeds the threshold.",
+    "whyWrong": [
+      "",
+      "Sourcetype classifies data and does not define the alert threshold.",
+      "Dashboard tokens control dashboard behavior.",
+      "A lookup enriches data but does not create the alert condition."
+    ],
+    "tip": "Threshold wording in a question points to alert trigger conditions.",
+    "difficulty": "medium",
+    "tags": [
+      "trigger condition",
+      "threshold"
+    ]
+  },
+  {
+    "id": 228,
+    "domain": "searching",
+    "q": "Which action pauses a running search but keeps the search job available to continue?",
+    "options": [
+      "Stop",
+      "Pause",
+      "Delete",
+      "Export"
+    ],
+    "answer": 1,
+    "explanation": "Pause temporarily halts processing while preserving the search job so it can be resumed.",
+    "whyWrong": [
+      "Stop ends the running search job.",
+      "",
+      "Delete is not the normal job-control action for temporarily halting a search.",
+      "Export saves results and does not pause processing."
+    ],
+    "tip": "Pause is temporary; stop ends the search.",
+    "difficulty": "easy",
+    "tags": [
+      "job controls",
+      "pause"
+    ]
+  },
+  {
+    "id": 229,
+    "domain": "reports",
+    "q": "Which SPL command is designed specifically to aggregate values over time using _time?",
+    "options": [
+      "chart",
+      "timechart",
+      "table",
+      "top"
+    ],
+    "answer": 1,
+    "explanation": "timechart creates time-based statistical results and uses _time as the horizontal axis.",
+    "whyWrong": [
+      "chart can aggregate categories but is not specifically time-based.",
+      "",
+      "table formats fields into columns.",
+      "top ranks common values."
+    ],
+    "tip": "When the question says 'over time,' think timechart.",
+    "difficulty": "easy",
+    "tags": [
+      "timechart",
+      "visualization"
+    ]
+  }
+],
+
   questionBank: [
     { id: 1, domain: "basics", q: "Which Splunk component normally receives, indexes, and stores incoming data?", options: ["Search head", "Indexer", "Dashboard", "App"], answer: 1, explanation: "The indexer processes incoming data into searchable events, builds index files, and stores the indexed data." },
     { id: 2, domain: "basics", q: "What is the primary purpose of a Splunk search head?", options: ["Collect endpoint data", "Store raw data permanently", "Coordinate searches and present results", "Replace all forwarders"], answer: 2, explanation: "The search head provides the search interface, dispatches searches, and presents reports and dashboards." },
