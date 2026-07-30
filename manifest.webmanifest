@@ -1,18 +1,619 @@
-{
-  "name": "Splunk Core User Exam Hub",
-  "short_name": "Splunk Exam Hub",
-  "description": "Five-day Splunk Core Certified User study hub with lessons, SPL practice, quizzes, and a timed mock exam.",
-  "start_url": "./",
-  "scope": "./",
-  "display": "standalone",
-  "background_color": "#07111f",
-  "theme_color": "#07111f",
-  "icons": [
-    {
-      "src": "./favicon.svg",
-      "sizes": "any",
-      "type": "image/svg+xml",
-      "purpose": "any maskable"
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#07111f">
+  <meta name="description" content="A complete five-day Splunk Core Certified User study hub with lessons, SPL practice, quizzes, a timed mock exam, and progress tracking.">
+  <title>Splunk Core User Exam Hub</title>
+  <link rel="icon" href="./favicon.svg" type="image/svg+xml">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="stylesheet" href="./styles.css">
+
+  <style>
+    .exam-timing-status {
+      margin: 0 0 1rem;
+      padding: .8rem 1rem;
+      border: 1px solid rgba(70, 180, 255, .38);
+      border-radius: .75rem;
+      background: rgba(20, 92, 140, .12);
+      display: flex;
+      gap: .5rem 1rem;
+      align-items: center;
+      flex-wrap: wrap;
     }
-  ]
-}
+    .exam-timing-status.hidden { display: none; }
+    .exam-timing-status strong { color: #8dd7ff; }
+    .exam-timing-status span { color: var(--muted, #aeb9c6); }
+    .quiz-timer.timer-warning {
+      color: #ffd166;
+      border-color: rgba(255, 209, 102, .55);
+      animation: timerPulse 1.5s ease-in-out infinite;
+    }
+    .quiz-timer.timer-critical {
+      color: #ff6b6b;
+      border-color: rgba(255, 107, 107, .75);
+      animation: timerPulse .75s ease-in-out infinite;
+    }
+    .quiz-app.exam-locked {
+      position: relative;
+    }
+    .quiz-app.exam-locked .question-card,
+    .quiz-app.exam-locked .question-navigator,
+    .quiz-app.exam-locked .quiz-controls {
+      pointer-events: none;
+      opacity: .72;
+      filter: grayscale(.15);
+    }
+    .quiz-app.exam-locked::after {
+      content: "Exam submitted";
+      position: absolute;
+      inset: .75rem .75rem auto auto;
+      padding: .45rem .7rem;
+      border-radius: 999px;
+      background: #7f1d1d;
+      color: #fff;
+      font-weight: 800;
+      letter-spacing: .02em;
+      z-index: 3;
+    }
+    .timeout-dialog {
+      max-width: 28rem;
+      width: calc(100% - 2rem);
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 1rem;
+      background: #0b1726;
+      color: #f5f8fc;
+      padding: 0;
+      box-shadow: 0 24px 90px rgba(0,0,0,.55);
+    }
+    .timeout-dialog::backdrop { background: rgba(0,0,0,.72); }
+    .timeout-dialog-shell {
+      padding: 2rem;
+      text-align: center;
+    }
+    .timeout-dialog-shell h2 { margin: .5rem 0; }
+    .timeout-dialog-shell p { color: #b9c5d3; margin: 0 0 1.25rem; }
+    .timeout-icon { font-size: 2.5rem; }
+    @keyframes timerPulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.035); }
+    }
+  </style>
+
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to study content</a>
+
+  <header class="site-header" id="top">
+    <div class="nav-shell">
+      <a class="brand" href="#home" aria-label="Splunk Core User Exam Hub home">
+        <span class="brand-mark" aria-hidden="true">S&gt;</span>
+        <span>
+          <strong>Splunk Exam Hub</strong>
+          <small>Core Certified User</small>
+        </span>
+      </a>
+      <button class="menu-button" id="menu-button" type="button" aria-expanded="false" aria-controls="site-nav">
+        <span></span><span></span><span></span><span class="sr-only">Toggle navigation</span>
+      </button>
+      <nav class="site-nav" id="site-nav" aria-label="Primary navigation">
+        <a href="#plan">5-Day Plan</a>
+        <a href="#lessons">Lessons</a>
+        <a href="#spl-lab">SPL Lab</a>
+        <a href="#quiz">Practice</a>
+        <a href="#review">Final Review</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main-content">
+    <section class="hero section" id="home">
+      <div class="hero-grid shell">
+        <div class="hero-copy reveal">
+          <span class="eyebrow"><span class="status-dot"></span> Five-day certification sprint</span>
+          <h1>Turn machine data into <span>exam-day confidence.</span></h1>
+          <p class="hero-lead">Learn Splunk by doing it: short lessons, realistic SPL searches, original exam-style questions, and a 60-question timed mock aligned to the current Core User blueprint.</p>
+          <div class="hero-actions">
+            <a class="button primary" href="#plan">Start Day 1 <span aria-hidden="true">→</span></a>
+            <a class="button secondary" href="#quiz">Take a quick diagnostic</a>
+          </div>
+          <div class="exam-facts" aria-label="Exam facts">
+            <div><strong>60</strong><span>questions</span></div>
+            <div><strong>57</strong><span>testing minutes</span></div>
+            <div><strong>8</strong><span>objective areas</span></div>
+          </div>
+        </div>
+
+        <aside class="readiness-card reveal" aria-labelledby="readiness-title">
+          <div class="card-topline">
+            <span id="readiness-title">Your readiness</span>
+            <span class="live-pill">Saved locally</span>
+          </div>
+          <div class="score-ring" id="score-ring" style="--score: 0">
+            <div><strong id="readiness-score">0%</strong><span>complete</span></div>
+          </div>
+          <div class="progress-copy">
+            <p><strong id="completed-count">0</strong> of <strong id="total-count">0</strong> study targets completed</p>
+            <div class="progress-track" aria-hidden="true"><span id="hero-progress"></span></div>
+          </div>
+          <div class="next-up" id="next-up">
+            <span>Next up</span>
+            <strong>Day 1 · Splunk foundations</strong>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="weight-strip" aria-label="Official exam domain weightings">
+      <div class="shell weighting-grid" id="weighting-grid"></div>
+    </section>
+
+    <section class="section shell" id="plan">
+      <div class="section-heading reveal">
+        <div>
+          <span class="eyebrow">Your path to exam day</span>
+          <h2>Five days. Clear targets. No guessing.</h2>
+        </div>
+        <p>Plan for four to five focused hours daily. Check off each task only after you can explain it without reading the answer.</p>
+      </div>
+      <div class="day-tabs" id="day-tabs" role="tablist" aria-label="Five-day study plan"></div>
+      <div class="day-panel reveal" id="day-panel" role="tabpanel"></div>
+    </section>
+
+    <section class="section section-tint" id="lessons">
+      <div class="shell">
+        <div class="section-heading reveal">
+          <div>
+            <span class="eyebrow">Blueprint lessons</span>
+            <h2>Master the eight tested domains.</h2>
+          </div>
+          <p>Each module includes plain-English explanations, exam traps, practice searches, and a hands-on task using your working <code>index=test</code>.</p>
+        </div>
+        <div class="lesson-grid" id="lesson-grid"></div>
+      </div>
+    </section>
+
+    <section class="section shell" id="spl-lab">
+      <div class="section-heading reveal">
+        <div>
+          <span class="eyebrow">Interactive SPL lab</span>
+          <h2>Practice searches without breaking anything.</h2>
+        </div>
+        <p>This learning simulator runs against built-in security events. Use the examples, change fields, and predict the output before pressing Run.</p>
+      </div>
+
+      <div class="lab-shell reveal">
+        <div class="lab-toolbar">
+          <div>
+            <span class="terminal-dot red"></span><span class="terminal-dot amber"></span><span class="terminal-dot green"></span>
+            <strong>SPL Practice Console</strong>
+          </div>
+          <span id="lab-event-count">18 sample events</span>
+        </div>
+        <div class="lab-main">
+          <aside class="search-recipes" aria-label="Practice search examples">
+            <h3>Try a search</h3>
+            <div id="lab-recipes"></div>
+          </aside>
+          <div class="console-area">
+            <label for="spl-input">Search Processing Language</label>
+            <div class="search-box">
+              <span aria-hidden="true">&gt;</span>
+              <textarea id="spl-input" rows="3" spellcheck="false">index=test | stats count BY status</textarea>
+              <button class="run-button" id="run-search" type="button">Run Search</button>
+            </div>
+            <div class="lab-hint" id="lab-hint">Tip: the pipe sends results to the next command.</div>
+            <div class="result-toolbar">
+              <div class="result-tabs" role="tablist" aria-label="Search results views">
+                <button class="active" type="button" data-result-view="table">Statistics</button>
+                <button type="button" data-result-view="events">Events</button>
+              </div>
+              <span id="result-summary">0 results</span>
+            </div>
+            <div class="results-wrap" id="lab-results" tabindex="0" aria-live="polite"></div>
+          </div>
+        </div>
+      </div>
+      <p class="lab-disclaimer">The simulator supports the Core User commands taught here. Run the same searches in Splunk Enterprise for the full product experience.</p>
+    </section>
+
+    <section class="section section-tint" id="quiz">
+      <div class="shell">
+        <div class="section-heading reveal">
+          <div>
+            <span class="eyebrow">Practice and prove it</span>
+            <h2>Test your knowledge under exam conditions.</h2>
+          </div>
+          <p>Questions are original practice items—not copied exam questions. Mock-exam answers remain hidden until you submit.</p>
+        </div>
+
+        <div class="quiz-launcher reveal" id="quiz-launcher">
+          <article class="mode-card featured">
+            <span class="mode-tag">Recommended first</span>
+            <h3>Quick diagnostic</h3>
+            <p>Ten mixed questions to expose your strongest and weakest domains.</p>
+            <div class="mode-meta"><span>10 questions</span><span>Untimed</span></div>
+            <button class="button primary quiz-start" type="button" data-mode="quick">Start diagnostic</button>
+          </article>
+          <article class="mode-card">
+            <span class="mode-tag">Target a weakness</span>
+            <h3>Domain drill</h3>
+            <p>Choose one blueprint area and complete a focused question set.</p>
+            <label for="domain-select">Choose domain</label>
+            <select id="domain-select"></select>
+            <button class="button secondary quiz-start" type="button" data-mode="domain">Start domain drill</button>
+          </article>
+          <article class="mode-card danger-card">
+            <span class="mode-tag">Exam simulation</span>
+            <h3>Full mock exam</h3>
+            <p>Sixty weighted questions with a strict 57-minute countdown. The exam automatically submits and locks when time expires.</p>
+            <div class="mode-meta"><span>60 questions</span><span>57 minutes</span></div>
+            <button class="button danger quiz-start" type="button" data-mode="mock">Start full mock</button>
+          </article>
+          <article class="mode-card bank-card">
+            <span class="mode-tag">New 89-question bank</span>
+            <h3>Mock Exam Bank 3</h3>
+            <p>A fresh 60-question exam is drawn from the cleaned community bank on every attempt.</p>
+            <div class="mode-meta"><span>89-question pool</span><span>57 minutes</span></div>
+            <button class="button primary quiz-start" type="button" data-mode="mock3">Start Bank 3 exam</button>
+          </article>
+        </div>
+
+        <div class="quiz-app hidden" id="quiz-app" aria-live="polite">
+          <div class="quiz-header">
+            <div>
+              <span id="quiz-mode-label">Practice</span>
+              <strong id="quiz-progress-label">Question 1 of 10</strong>
+            </div>
+            <div class="quiz-timer hidden" id="quiz-timer" aria-label="Time remaining">57:00</div>
+            <button class="text-button" id="exit-quiz" type="button">Exit</button>
+          </div>
+          <div class="exam-timing-status hidden" id="exam-timing-status" role="status" aria-live="polite">
+            <strong id="exam-timing-message">Timed exam active</strong>
+            <span>Your answers are saved locally. At 00:00, the exam submits automatically and answer controls lock.</span>
+          </div>
+          <div class="quiz-progress"><span id="quiz-progress-bar"></span></div>
+          <div class="quiz-layout">
+            <div class="question-card" id="question-card"></div>
+            <aside class="question-navigator" id="question-navigator" aria-label="Question navigator"></aside>
+          </div>
+          <div class="quiz-controls">
+            <button class="button secondary" id="previous-question" type="button">Previous</button>
+            <button class="button primary" id="next-question" type="button">Next</button>
+            <button class="button danger hidden" id="submit-quiz" type="button">Submit answers</button>
+          </div>
+        </div>
+
+        <div class="quiz-results hidden" id="quiz-results"></div>
+      </div>
+    </section>
+
+    <section class="section shell" id="review">
+      <div class="section-heading reveal">
+        <div>
+          <span class="eyebrow">Final review</span>
+          <h2>Your exam-ready checklist.</h2>
+        </div>
+        <p>You are ready when these are true and you have scored at least 85% on two timed mock attempts.</p>
+      </div>
+      <div class="review-grid">
+        <div class="checklist-card reveal">
+          <div class="checklist-header">
+            <div><span>Readiness checklist</span><strong id="checklist-progress">0 / 0</strong></div>
+            <button class="text-button" id="reset-progress" type="button">Reset progress</button>
+          </div>
+          <div id="final-checklist"></div>
+        </div>
+        <aside class="pocket-card reveal">
+          <span class="eyebrow">SPL pocket reference</span>
+          <h3>Commands to know cold</h3>
+          <div id="pocket-reference"></div>
+          <a class="button primary download-button" href="./downloads/Splunk_Core_User_Offline_Study_Guide.pdf" download>Download the offline guide</a>
+        </aside>
+      </div>
+    </section>
+
+    <section class="source-strip">
+      <div class="shell">
+        <div>
+          <strong>Built against the current official blueprint.</strong>
+          <span>Use this hub with hands-on practice in Splunk Enterprise.</span>
+        </div>
+        <div class="source-links">
+          <a href="https://www.splunk.com/en_us/pdfs/training/splunk-test-blueprint-user.pdf" target="_blank" rel="noreferrer">Exam blueprint ↗</a>
+          <a href="https://help.splunk.com/" target="_blank" rel="noreferrer">Splunk Help ↗</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="shell">
+      <div class="brand footer-brand"><span class="brand-mark" aria-hidden="true">S&gt;</span><span><strong>Splunk Exam Hub</strong><small>Core Certified User</small></span></div>
+      <p>Original study content for certification preparation. Not affiliated with or endorsed by Splunk.</p>
+      <a href="#top">Back to top ↑</a>
+    </div>
+  </footer>
+
+  <dialog class="lesson-dialog" id="lesson-dialog" aria-labelledby="lesson-dialog-title">
+    <div class="dialog-shell">
+      <button class="dialog-close" id="dialog-close" type="button" aria-label="Close lesson">×</button>
+      <div id="lesson-dialog-content"></div>
+    </div>
+  </dialog>
+
+  <dialog class="timeout-dialog" id="timeout-dialog" aria-labelledby="timeout-title">
+    <div class="timeout-dialog-shell">
+      <span class="timeout-icon" aria-hidden="true">⏱</span>
+      <h2 id="timeout-title">Time expired</h2>
+      <p>Your mock exam was automatically submitted. Answers are now locked.</p>
+      <button class="button primary" id="timeout-results-button" type="button">View results</button>
+    </div>
+  </dialog>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="./data.js"></script>
+  <script src="./app.js"></script>
+
+  <script>
+  (() => {
+    "use strict";
+
+    const STORAGE_KEY = "splunkExamHub.mockSession.v1";
+    const MOCK_SECONDS = 57 * 60;
+    const WARNING_POINTS = new Set([15 * 60, 5 * 60, 60]);
+    let intervalId = null;
+    let deadline = 0;
+    let submitted = false;
+    let warningHistory = new Set();
+
+    const byId = (id) => document.getElementById(id);
+    const getTimer = () => byId("quiz-timer");
+    const getQuizApp = () => byId("quiz-app");
+    const getStatus = () => byId("exam-timing-status");
+
+    function readSession() {
+      try {
+        return JSON.parse(localStorage.getItem(STORAGE_KEY) || "null");
+      } catch {
+        return null;
+      }
+    }
+
+    function writeSession(extra = {}) {
+      const current = readSession() || {};
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({
+        ...current,
+        mode: "mock",
+        deadline,
+        submitted,
+        savedAt: Date.now(),
+        ...extra
+      }));
+    }
+
+    function clearSession() {
+      localStorage.removeItem(STORAGE_KEY);
+    }
+
+    function formatTime(totalSeconds) {
+      const safe = Math.max(0, totalSeconds);
+      const minutes = Math.floor(safe / 60);
+      const seconds = safe % 60;
+      return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+    }
+
+    function showToast(message) {
+      const toast = byId("toast");
+      if (!toast) return;
+      toast.textContent = message;
+      toast.classList.add("show");
+      window.setTimeout(() => toast.classList.remove("show"), 4200);
+    }
+
+    function setTimedUi(active) {
+      const timer = getTimer();
+      const status = getStatus();
+      if (timer) timer.classList.toggle("hidden", !active);
+      if (status) status.classList.toggle("hidden", !active);
+    }
+
+    function saveAnswersSnapshot() {
+      const answers = {};
+      document.querySelectorAll("#quiz-app input[type='radio'], #quiz-app input[type='checkbox']").forEach((input) => {
+        const key = input.name || input.id;
+        if (!key) return;
+        if (input.type === "checkbox") {
+          answers[key] ||= [];
+          if (input.checked) answers[key].push(input.value);
+        } else if (input.checked) {
+          answers[key] = input.value;
+        }
+      });
+      writeSession({
+        answers,
+        progressLabel: byId("quiz-progress-label")?.textContent || "",
+        timerText: getTimer()?.textContent || ""
+      });
+    }
+
+    function restoreAnswersSnapshot(session) {
+      if (!session?.answers) return;
+      document.querySelectorAll("#quiz-app input[type='radio'], #quiz-app input[type='checkbox']").forEach((input) => {
+        const key = input.name || input.id;
+        const saved = session.answers[key];
+        if (Array.isArray(saved)) input.checked = saved.includes(input.value);
+        else if (saved !== undefined) input.checked = saved === input.value;
+      });
+    }
+
+    function lockExam() {
+      const app = getQuizApp();
+      if (app) app.classList.add("exam-locked");
+      document.querySelectorAll("#quiz-app input, #quiz-app select, #quiz-app textarea").forEach((el) => {
+        el.disabled = true;
+      });
+      document.querySelectorAll("#quiz-app button").forEach((el) => {
+        if (el.id !== "exit-quiz") el.disabled = true;
+      });
+    }
+
+    function submitUsingExistingApp() {
+      const submitButton = byId("submit-quiz");
+      if (submitButton) {
+        submitButton.classList.remove("hidden");
+        submitButton.disabled = false;
+        submitButton.click();
+        return true;
+      }
+      if (typeof window.submitQuiz === "function") {
+        window.submitQuiz({ timedOut: true, automatic: true });
+        return true;
+      }
+      document.dispatchEvent(new CustomEvent("splunk-exam-timeout-submit", {
+        detail: { timedOut: true, automatic: true }
+      }));
+      return false;
+    }
+
+    function showTimeoutDialog() {
+      const dialog = byId("timeout-dialog");
+      if (!dialog) return;
+      if (typeof dialog.showModal === "function" && !dialog.open) dialog.showModal();
+      else dialog.setAttribute("open", "");
+    }
+
+    function finishForTimeout() {
+      if (submitted) return;
+      submitted = true;
+      window.clearInterval(intervalId);
+      intervalId = null;
+      saveAnswersSnapshot();
+      writeSession({ submitted: true, timedOut: true, finishedAt: Date.now() });
+      lockExam();
+      const timer = getTimer();
+      if (timer) timer.textContent = "00:00";
+      const statusMessage = byId("exam-timing-message");
+      if (statusMessage) statusMessage.textContent = "Time expired — exam automatically submitted";
+      submitUsingExistingApp();
+      showTimeoutDialog();
+    }
+
+    function warnAt(remaining) {
+      if (!WARNING_POINTS.has(remaining) || warningHistory.has(remaining)) return;
+      warningHistory.add(remaining);
+      if (remaining === 900) showToast("15 minutes remaining.");
+      if (remaining === 300) showToast("5 minutes remaining.");
+      if (remaining === 60) showToast("1 minute remaining. The exam will auto-submit at 00:00.");
+    }
+
+    function tick() {
+      const timer = getTimer();
+      if (!timer || !deadline) return;
+      const remaining = Math.max(0, Math.ceil((deadline - Date.now()) / 1000));
+      timer.textContent = formatTime(remaining);
+      timer.classList.toggle("timer-warning", remaining <= 300 && remaining > 60);
+      timer.classList.toggle("timer-critical", remaining <= 60);
+      timer.setAttribute("aria-label", `${Math.floor(remaining / 60)} minutes ${remaining % 60} seconds remaining`);
+      warnAt(remaining);
+      if (remaining <= 0) finishForTimeout();
+      else if (remaining % 5 === 0) saveAnswersSnapshot();
+    }
+
+    function startMockTimer({ resume = false } = {}) {
+      submitted = false;
+      warningHistory = new Set();
+      setTimedUi(true);
+
+      const existing = readSession();
+      if (resume && existing?.deadline && !existing.submitted) {
+        deadline = Number(existing.deadline);
+      } else {
+        deadline = Date.now() + MOCK_SECONDS * 1000;
+        writeSession({ startedAt: Date.now(), timedOut: false, answers: {} });
+      }
+
+      window.clearInterval(intervalId);
+      tick();
+      intervalId = window.setInterval(tick, 1000);
+    }
+
+    function confirmExit(event) {
+      if (!intervalId || submitted) return;
+      const leave = window.confirm("Leaving will submit and permanently end this timed mock attempt. Continue?");
+      if (!leave) {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        return;
+      }
+      saveAnswersSnapshot();
+      submitted = true;
+      writeSession({ submitted: true, exitedEarly: true, finishedAt: Date.now() });
+      submitUsingExistingApp();
+      window.clearInterval(intervalId);
+      intervalId = null;
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      document.querySelectorAll(".quiz-start[data-mode='mock'], .quiz-start[data-mode='mock3']").forEach((button) => {
+        button.addEventListener("click", () => {
+          window.setTimeout(() => startMockTimer(), 0);
+        });
+      });
+
+      byId("exit-quiz")?.addEventListener("click", confirmExit, true);
+
+      byId("submit-quiz")?.addEventListener("click", () => {
+        if (!intervalId || submitted) return;
+        submitted = true;
+        saveAnswersSnapshot();
+        writeSession({ submitted: true, finishedAt: Date.now(), timedOut: false });
+        window.clearInterval(intervalId);
+        intervalId = null;
+      }, true);
+
+      byId("quiz-app")?.addEventListener("change", () => {
+        if (intervalId && !submitted) saveAnswersSnapshot();
+      });
+
+      byId("timeout-results-button")?.addEventListener("click", () => {
+        const dialog = byId("timeout-dialog");
+        if (dialog?.open) dialog.close();
+        byId("quiz-results")?.scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+
+      const session = readSession();
+      if (session?.mode === "mock" && !session.submitted && session.deadline) {
+        if (Date.now() >= Number(session.deadline)) {
+          deadline = Number(session.deadline);
+          setTimedUi(true);
+          finishForTimeout();
+        } else {
+          const resume = window.confirm("A timed mock exam is still in progress. Resume it now?");
+          if (resume) {
+            startMockTimer({ resume: true });
+            window.setTimeout(() => restoreAnswersSnapshot(session), 300);
+          } else {
+            clearSession();
+          }
+        }
+      }
+    });
+
+    window.addEventListener("beforeunload", (event) => {
+      if (!intervalId || submitted) return;
+      saveAnswersSnapshot();
+      event.preventDefault();
+      event.returnValue = "";
+    });
+
+    document.addEventListener("visibilitychange", () => {
+      if (!document.hidden && intervalId && !submitted) tick();
+    });
+  })();
+  </script>
+
+</body>
+</html>
