@@ -564,13 +564,27 @@
     $("#domain-select").innerHTML = DATA.domains.map((domain) => `<option value="${domain.id}">${escapeHtml(domain.name)}</option>`).join("");
   }
 
-  function selectMockQuestions() {
-    const quotas = { basics: 3, searching: 13, fields: 12, language: 9, transforming: 9, reports: 7, lookups: 4, alerts: 3 };
+  function selectMockQuestions(bank = DATA.questionBank, total = 60) {
+    const weights = { basics: 5, searching: 22, fields: 20, language: 15, transforming: 15, reports: 12, lookups: 6, alerts: 5 };
     const selected = [];
-    Object.entries(quotas).forEach(([domain, count]) => {
-      selected.push(...shuffle(DATA.questionBank.filter((question) => question.domain === domain)).slice(0, count));
+    const used = new Set();
+
+    DATA.domains.forEach((domain) => {
+      const target = Math.max(1, Math.round((weights[domain.id] / 100) * total));
+      const candidates = shuffle(bank.filter((question) => question.domain === domain.id));
+      candidates.slice(0, target).forEach((question) => {
+        selected.push(question);
+        used.add(question.id);
+      });
     });
-    return shuffle(selected);
+
+    if (selected.length < total) {
+      shuffle(bank.filter((question) => !used.has(question.id)))
+        .slice(0, total - selected.length)
+        .forEach((question) => selected.push(question));
+    }
+
+    return shuffle(selected).slice(0, Math.min(total, bank.length));
   }
 
   function randomizeQuestionOptions(questions) {
@@ -587,8 +601,6 @@
   function startQuiz(mode) {
     let questions;
     let label;
-    let durationMinutes = null;
-
     if (mode === "quick") {
       questions = shuffle(DATA.questionBank).slice(0, 10);
       label = "Quick diagnostic";
@@ -596,19 +608,16 @@
       const domainId = $("#domain-select").value;
       questions = shuffle(DATA.questionBank.filter((question) => question.domain === domainId));
       label = `${domainById(domainId).name} drill`;
-    } else if (mode === "mock2") {
-      questions = shuffle(DATA.mock2Questions);
-      label = "Mock Exam 2";
-      durationMinutes = 28;
+    } else if (mode === "mock3") {
+      questions = selectMockQuestions(DATA.mockExamBank3, 60);
+      label = "Mock Exam Bank 3";
     } else {
-      questions = selectMockQuestions();
-      label = "Mock Exam 1";
-      durationMinutes = 57;
-      mode = "mock1";
+      questions = selectMockQuestions(DATA.questionBank, 60);
+      label = "Full mock exam";
     }
 
     questions = randomizeQuestionOptions(questions);
-    const isTimed = durationMinutes !== null;
+    const isTimedMock = mode === "mock" || mode === "mock3";
 
     quizState = {
       mode,
@@ -617,20 +626,16 @@
       index: 0,
       answers: {},
       startedAt: Date.now(),
-      endAt: isTimed ? Date.now() + (durationMinutes * 60 * 1000) : null,
-      durationMinutes,
+      endAt: isTimedMock ? Date.now() + (57 * 60 * 1000) : null,
       timerId: null
     };
 
     $("#quiz-launcher").classList.add("hidden");
     $("#quiz-results").classList.add("hidden");
     $("#quiz-app").classList.remove("hidden");
-    $("#quiz-app").classList.remove("exam-locked");
     $("#quiz-mode-label").textContent = label;
-    $("#quiz-timer").classList.toggle("hidden", !isTimed);
-    $("#exam-timing-status").classList.toggle("hidden", !isTimed);
-    if (isTimed) {
-      $("#exam-timing-message").textContent = `${label} timed session active`;
+    $("#quiz-timer").classList.toggle("hidden", !isTimedMock);
+    if (isTimedMock) {
       updateTimer();
       quizState.timerId = setInterval(updateTimer, 250);
     }
@@ -708,14 +713,13 @@
     const elapsed = Math.round((Date.now() - quizState.startedAt) / 1000);
     const snapshot = { ...quizState, answers: { ...quizState.answers } };
 
-    if (snapshot.mode === "mock1" || snapshot.mode === "mock2") {
-      state.mockHistory.push({ date: new Date().toISOString(), exam: snapshot.label, percent, correct, total: snapshot.questions.length, elapsed });
+    if (snapshot.mode === "mock" || snapshot.mode === "mock3") {
+      state.mockHistory.push({ date: new Date().toISOString(), percent, correct, total: snapshot.questions.length, elapsed });
       state.mockHistory = state.mockHistory.slice(-10);
       saveState();
     }
 
     $("#quiz-app").classList.add("hidden");
-    $("#exam-timing-status").classList.add("hidden");
     renderQuizResults(snapshot, { answered, correct, percent, elapsed, autoSubmitted });
     quizState = null;
   }
@@ -759,9 +763,6 @@
             <p><strong>Your answer:</strong> ${chosen === undefined ? "Unanswered" : `${String.fromCharCode(65 + chosen)}. ${escapeHtml(question.options[chosen])}`}</p>
             <p><strong>Correct answer:</strong> ${String.fromCharCode(65 + question.answer)}. ${escapeHtml(question.options[question.answer])}</p>
             <p><strong>Why:</strong> ${escapeHtml(question.explanation)}</p>
-            ${chosen !== undefined && question.whyWrong?.[chosen] ? `<p><strong>Why your choice missed:</strong> ${escapeHtml(question.whyWrong[chosen])}</p>` : ""}
-            ${question.tip ? `<div class="coach-tip"><strong>CyberBoss exam tip:</strong> ${escapeHtml(question.tip)}</div>` : ""}
-            ${(question.tags?.length || question.difficulty) ? `<div class="review-tags">${question.difficulty ? `<span>${escapeHtml(question.difficulty)}</span>` : ""}${(question.tags || []).map((tag) => `<span>${escapeHtml(tag)}</span>`).join("")}</div>` : ""}
           </div>
         `;
       }).join("") : `<div class="review-answer correct"><p>You answered every question correctly. Move to a harder mode or repeat the timed mock with a fresh question order.</p></div>`}
@@ -822,7 +823,6 @@
       clearInterval(quizState.timerId);
       quizState = null;
       $("#quiz-app").classList.add("hidden");
-      $("#exam-timing-status").classList.add("hidden");
       $("#quiz-launcher").classList.remove("hidden");
       showToast("Quiz exited; this attempt was not scored.");
     });

@@ -312,734 +312,6 @@ window.SPLUNK_HUB_DATA = {
     "I reviewed every missed or guessed question by explaining why each wrong option is wrong."
   ],
 
-  mock2Questions: [
-  {
-    "id": 201,
-    "domain": "basics",
-    "q": "Which Splunk component provides the primary interface for users to run searches and view dashboards?",
-    "options": [
-      "Indexer",
-      "Search head",
-      "Universal forwarder",
-      "Deployment server"
-    ],
-    "answer": 1,
-    "explanation": "The search head provides the user interface, dispatches searches to indexers, and presents reports and dashboards.",
-    "whyWrong": [
-      "An indexer stores and searches indexed data but is not the primary user interface.",
-      "",
-      "A universal forwarder collects and sends data; it does not provide the normal search interface.",
-      "A deployment server distributes apps and configuration to deployment clients."
-    ],
-    "tip": "Search and presentation = search head. Storage and indexing = indexer.",
-    "difficulty": "easy",
-    "tags": [
-      "architecture",
-      "search head"
-    ]
-  },
-  {
-    "id": 202,
-    "domain": "basics",
-    "q": "What is the main purpose of a Splunk index?",
-    "options": [
-      "To group users by role",
-      "To store searchable machine data",
-      "To define dashboard colors",
-      "To schedule forwarder upgrades"
-    ],
-    "answer": 1,
-    "explanation": "An index is the repository where Splunk stores processed, searchable event data.",
-    "whyWrong": [
-      "Roles control permissions, not data storage.",
-      "",
-      "Dashboard appearance is unrelated to indexes.",
-      "Forwarder management is separate from the purpose of an index."
-    ],
-    "tip": "Think of an index as the searchable home for events.",
-    "difficulty": "easy",
-    "tags": [
-      "index",
-      "data storage"
-    ]
-  },
-  {
-    "id": 203,
-    "domain": "searching",
-    "q": "Which search returns events containing either error or warning?",
-    "options": [
-      "index=main error warning",
-      "index=main error AND warning",
-      "index=main error OR warning",
-      "index=main error NOT warning"
-    ],
-    "answer": 2,
-    "explanation": "Uppercase OR returns events that match either term.",
-    "whyWrong": [
-      "A space implies AND, so both terms would be required.",
-      "This explicitly requires both terms.",
-      "",
-      "NOT excludes warning events."
-    ],
-    "tip": "Use uppercase Boolean operators in SPL to make intent unambiguous.",
-    "difficulty": "easy",
-    "tags": [
-      "Boolean",
-      "OR"
-    ]
-  },
-  {
-    "id": 204,
-    "domain": "searching",
-    "q": "Which time modifier searches from the beginning of today through the present?",
-    "options": [
-      "earliest=-24h latest=now",
-      "earliest=@d latest=now",
-      "earliest=-1d@d latest=@d",
-      "earliest=now latest=@d"
-    ],
-    "answer": 1,
-    "explanation": "@d snaps earliest to the start of the current day, while latest=now ends at the present moment.",
-    "whyWrong": [
-      "The last 24 hours is not necessarily the same as today.",
-      "",
-      "This searches the previous calendar day.",
-      "The time order is reversed and does not represent today through now."
-    ],
-    "tip": "@d means the beginning of the current day.",
-    "difficulty": "medium",
-    "tags": [
-      "time",
-      "snap-to"
-    ]
-  },
-  {
-    "id": 205,
-    "domain": "searching",
-    "q": "What happens when you click a segment of the event timeline in Search & Reporting?",
-    "options": [
-      "Splunk deletes events outside the segment",
-      "The search time range is narrowed to that segment",
-      "A report is scheduled automatically",
-      "The selected events are exported"
-    ],
-    "answer": 1,
-    "explanation": "Selecting a timeline segment zooms the search to that period by adjusting the time range.",
-    "whyWrong": [
-      "Search actions do not delete indexed events.",
-      "",
-      "Scheduling requires saving and configuring a report or alert.",
-      "Exporting requires an explicit export action."
-    ],
-    "tip": "Timeline interaction changes the search window, not stored data.",
-    "difficulty": "easy",
-    "tags": [
-      "timeline",
-      "time picker"
-    ]
-  },
-  {
-    "id": 206,
-    "domain": "searching",
-    "q": "Which search is generally the most efficient starting point?",
-    "options": [
-      "error",
-      "*",
-      "index=security sourcetype=WinEventLog:Security",
-      "All time | search failure"
-    ],
-    "answer": 2,
-    "explanation": "Starting with indexed metadata such as index and sourcetype narrows the search early and efficiently.",
-    "whyWrong": [
-      "A bare keyword may search broadly across the default indexes.",
-      "A wildcard by itself is extremely broad.",
-      "",
-      "All time is broad, and the pipeline filter occurs later."
-    ],
-    "tip": "Constrain by index, sourcetype, host, source, and time as early as possible.",
-    "difficulty": "medium",
-    "tags": [
-      "search optimization",
-      "metadata"
-    ]
-  },
-  {
-    "id": 207,
-    "domain": "fields",
-    "q": "Which default field contains the original event text?",
-    "options": [
-      "_time",
-      "_raw",
-      "source",
-      "host"
-    ],
-    "answer": 1,
-    "explanation": "_raw contains the event's original raw text as displayed in search results.",
-    "whyWrong": [
-      "_time stores the event timestamp.",
-      "",
-      "source identifies where the data came from.",
-      "host identifies the originating machine or device."
-    ],
-    "tip": "_raw = raw event text; _time = event timestamp.",
-    "difficulty": "easy",
-    "tags": [
-      "_raw",
-      "metadata"
-    ]
-  },
-  {
-    "id": 208,
-    "domain": "fields",
-    "q": "What does the source field normally identify?",
-    "options": [
-      "The data format classification",
-      "The user who created the event",
-      "The input origin such as a file path or network input",
-      "The index that stores the event"
-    ],
-    "answer": 2,
-    "explanation": "source identifies the specific input origin, such as a file path, script, or network input.",
-    "whyWrong": [
-      "sourcetype classifies the data format.",
-      "User identity is usually stored in a user-related field.",
-      "",
-      "index identifies the storage destination."
-    ],
-    "tip": "source = where it came from; sourcetype = what kind of data it is.",
-    "difficulty": "easy",
-    "tags": [
-      "source",
-      "sourcetype"
-    ]
-  },
-  {
-    "id": 209,
-    "domain": "fields",
-    "q": "Which command removes _raw from the fields passed to later commands?",
-    "options": [
-      "| fields _raw",
-      "| fields - _raw",
-      "| table - _raw",
-      "| delete _raw"
-    ],
-    "answer": 1,
-    "explanation": "The minus form of fields excludes the named field from subsequent results.",
-    "whyWrong": [
-      "This keeps _raw rather than removing it.",
-      "",
-      "table does not use a minus sign this way.",
-      "delete is not the command for removing a field from search results."
-    ],
-    "tip": "fields field1 field2 keeps fields; fields - field1 removes fields.",
-    "difficulty": "easy",
-    "tags": [
-      "fields",
-      "field removal"
-    ]
-  },
-  {
-    "id": 210,
-    "domain": "fields",
-    "q": "What is an interesting field in the Splunk fields sidebar?",
-    "options": [
-      "A field manually pinned by the user",
-      "A field that appears frequently enough in the current result set",
-      "A field stored only at index time",
-      "A field that contains numeric values only"
-    ],
-    "answer": 1,
-    "explanation": "Splunk identifies interesting fields based on their prevalence in the current search results.",
-    "whyWrong": [
-      "Manually pinned fields are selected fields.",
-      "",
-      "Interesting fields are not defined solely by index-time extraction.",
-      "They can contain text, numbers, or other values."
-    ],
-    "tip": "Selected fields are chosen by you; interesting fields are surfaced by Splunk.",
-    "difficulty": "medium",
-    "tags": [
-      "fields sidebar",
-      "interesting fields"
-    ]
-  },
-  {
-    "id": 211,
-    "domain": "language",
-    "q": "What is the purpose of the pipe character in SPL?",
-    "options": [
-      "It joins two indexes permanently",
-      "It sends the current results to the next command",
-      "It creates a lookup definition",
-      "It marks a comment"
-    ],
-    "answer": 1,
-    "explanation": "The pipe passes the current result set into the next command in the search pipeline.",
-    "whyWrong": [
-      "Indexes are not joined permanently by a pipe.",
-      "",
-      "Lookup definitions are created through settings or configuration.",
-      "The pipe is not the SPL comment marker."
-    ],
-    "tip": "Read SPL left to right: each command receives what the previous command produced.",
-    "difficulty": "easy",
-    "tags": [
-      "pipe",
-      "pipeline"
-    ]
-  },
-  {
-    "id": 212,
-    "domain": "language",
-    "q": "Which search keeps the newest event for each user?",
-    "options": [
-      "index=main | dedup user | sort - _time",
-      "index=main | sort - _time | dedup user",
-      "index=main | sort user | head 1",
-      "index=main | table user _time"
-    ],
-    "answer": 1,
-    "explanation": "Sorting newest first and then deduplicating by user keeps the first, newest event for each user.",
-    "whyWrong": [
-      "Dedup occurs before the sort, so the retained event is not explicitly controlled.",
-      "",
-      "This returns only one event overall after sorting by user.",
-      "table changes presentation but does not deduplicate."
-    ],
-    "tip": "Control order before dedup when the retained record matters.",
-    "difficulty": "medium",
-    "tags": [
-      "sort",
-      "dedup"
-    ]
-  },
-  {
-    "id": 213,
-    "domain": "language",
-    "q": "Which command changes a field label only in the current search results?",
-    "options": [
-      "rename",
-      "replace",
-      "lookup",
-      "convert"
-    ],
-    "answer": 0,
-    "explanation": "rename changes a field name in the current result set, commonly using AS.",
-    "whyWrong": [
-      "",
-      "replace changes field values, not the field name itself.",
-      "lookup enriches events using external data.",
-      "convert changes field data types or formats."
-    ],
-    "tip": "rename host AS system changes presentation, not indexed data.",
-    "difficulty": "easy",
-    "tags": [
-      "rename",
-      "fields"
-    ]
-  },
-  {
-    "id": 214,
-    "domain": "language",
-    "q": "Why is table usually placed near the end of an SPL pipeline?",
-    "options": [
-      "It automatically speeds every search",
-      "It limits the fields available to later commands",
-      "It writes results back to the index",
-      "It changes the search time range"
-    ],
-    "answer": 1,
-    "explanation": "table retains only the listed fields, so later commands cannot use fields that table removed.",
-    "whyWrong": [
-      "It is mainly a presentation command and does not guarantee universal performance gains.",
-      "",
-      "table does not modify indexed data.",
-      "It does not control time."
-    ],
-    "tip": "Do not remove fields before later commands need them.",
-    "difficulty": "medium",
-    "tags": [
-      "table",
-      "command order"
-    ]
-  },
-  {
-    "id": 215,
-    "domain": "transforming",
-    "q": "Which command returns the most common values of a field with count and percent?",
-    "options": [
-      "rare",
-      "top",
-      "stats dc(field)",
-      "dedup"
-    ],
-    "answer": 1,
-    "explanation": "top ranks the most frequent field values and normally includes count and percent.",
-    "whyWrong": [
-      "rare returns the least common values.",
-      "",
-      "dc counts distinct values but does not rank the values themselves.",
-      "dedup removes duplicate values rather than ranking them."
-    ],
-    "tip": "top = most common; rare = least common.",
-    "difficulty": "easy",
-    "tags": [
-      "top",
-      "transforming"
-    ]
-  },
-  {
-    "id": 216,
-    "domain": "transforming",
-    "q": "What does dc(user) calculate?",
-    "options": [
-      "The total number of events",
-      "The number of distinct user values",
-      "The average number of users",
-      "The most common user"
-    ],
-    "answer": 1,
-    "explanation": "dc stands for distinct count and returns the number of unique values in the specified field.",
-    "whyWrong": [
-      "count measures events or non-null values.",
-      "",
-      "avg requires a numeric field.",
-      "top is used to find the most common values."
-    ],
-    "tip": "dc = distinct count, not total event count.",
-    "difficulty": "easy",
-    "tags": [
-      "stats",
-      "dc"
-    ]
-  },
-  {
-    "id": 217,
-    "domain": "transforming",
-    "q": "What does BY status do in `| stats count BY status`?",
-    "options": [
-      "Filters out the status field",
-      "Creates one result row for each distinct status value",
-      "Renames count to status",
-      "Sorts statuses alphabetically"
-    ],
-    "answer": 1,
-    "explanation": "BY groups the aggregation so Splunk returns a separate count for each distinct status value.",
-    "whyWrong": [
-      "The field is used for grouping, not removed.",
-      "",
-      "AS performs renaming.",
-      "Grouping does not inherently guarantee a specific sort order."
-    ],
-    "tip": "BY answers 'for each value of this field.'",
-    "difficulty": "easy",
-    "tags": [
-      "stats",
-      "BY"
-    ]
-  },
-  {
-    "id": 218,
-    "domain": "transforming",
-    "q": "After `| stats count BY host`, which fields are guaranteed in the output?",
-    "options": [
-      "All original fields",
-      "Only _raw and _time",
-      "host and count",
-      "source, sourcetype, and host"
-    ],
-    "answer": 2,
-    "explanation": "A transforming stats command returns the grouping field host and the calculated field count.",
-    "whyWrong": [
-      "Transforming commands do not preserve every original event field.",
-      "_raw and _time are not automatically retained here.",
-      "",
-      "source and sourcetype were not grouping or calculated fields."
-    ],
-    "tip": "After stats, expect only group-by fields and calculated fields.",
-    "difficulty": "medium",
-    "tags": [
-      "stats",
-      "transforming output"
-    ]
-  },
-  {
-    "id": 219,
-    "domain": "reports",
-    "q": "What is a Splunk report?",
-    "options": [
-      "A saved search that can be rerun and optionally scheduled",
-      "A collection of dashboard panels only",
-      "A raw data input",
-      "A user role"
-    ],
-    "answer": 0,
-    "explanation": "A report is a saved search that can be rerun, shared according to permissions, visualized, and optionally scheduled.",
-    "whyWrong": [
-      "",
-      "A dashboard contains panels and may use reports, but it is not itself a report.",
-      "A data input brings data into Splunk.",
-      "A role controls permissions."
-    ],
-    "tip": "Report = saved search. Dashboard = view containing panels.",
-    "difficulty": "easy",
-    "tags": [
-      "reports",
-      "saved search"
-    ]
-  },
-  {
-    "id": 220,
-    "domain": "reports",
-    "q": "Which visualization is usually best for showing event volume over time?",
-    "options": [
-      "Single value",
-      "Line chart",
-      "Pie chart",
-      "Scatter plot"
-    ],
-    "answer": 1,
-    "explanation": "A line chart clearly shows change and trends over a time axis.",
-    "whyWrong": [
-      "A single value hides the trend.",
-      "",
-      "Pie charts show parts of a whole, not time progression.",
-      "Scatter plots are usually for relationships between numeric variables."
-    ],
-    "tip": "Time trend = timechart plus line or column visualization.",
-    "difficulty": "easy",
-    "tags": [
-      "visualization",
-      "timechart"
-    ]
-  },
-  {
-    "id": 221,
-    "domain": "reports",
-    "q": "What is a dashboard panel?",
-    "options": [
-      "A physical Splunk server",
-      "A dashboard element powered by a search or report",
-      "A type of index",
-      "A forwarder configuration file"
-    ],
-    "answer": 1,
-    "explanation": "A panel is an individual dashboard element backed by an inline search or saved report.",
-    "whyWrong": [
-      "It is a user-interface element, not a server.",
-      "",
-      "Indexes store searchable data.",
-      "Forwarder configuration files are unrelated to dashboard panels."
-    ],
-    "tip": "A dashboard is the container; panels are the individual visual elements.",
-    "difficulty": "easy",
-    "tags": [
-      "dashboards",
-      "panels"
-    ]
-  },
-  {
-    "id": 222,
-    "domain": "lookups",
-    "q": "What does a lookup commonly add to search results?",
-    "options": [
-      "External contextual fields matched by a key",
-      "A new indexer",
-      "A permanent copy of every event",
-      "A new user role"
-    ],
-    "answer": 0,
-    "explanation": "A lookup matches event field values to external data and adds contextual fields to the search results.",
-    "whyWrong": [
-      "",
-      "Lookups do not deploy Splunk infrastructure.",
-      "They enrich results; they do not duplicate every event permanently.",
-      "Roles are managed separately."
-    ],
-    "tip": "Lookups enrich events with context such as owner, department, or asset criticality.",
-    "difficulty": "easy",
-    "tags": [
-      "lookup",
-      "enrichment"
-    ]
-  },
-  {
-    "id": 223,
-    "domain": "lookups",
-    "q": "In `| lookup assets.csv ip OUTPUT owner`, what is ip used for?",
-    "options": [
-      "The output field only",
-      "The matching key between events and the lookup",
-      "The name of a dashboard",
-      "The index name"
-    ],
-    "answer": 1,
-    "explanation": "The ip field is used to match event values to rows in the lookup table; owner is then returned.",
-    "whyWrong": [
-      "owner is the output field in this example.",
-      "",
-      "The command does not define a dashboard.",
-      "The index is specified in the base search, not here."
-    ],
-    "tip": "Fields before OUTPUT are match keys; fields after OUTPUT are returned.",
-    "difficulty": "medium",
-    "tags": [
-      "lookup syntax",
-      "OUTPUT"
-    ]
-  },
-  {
-    "id": 224,
-    "domain": "lookups",
-    "q": "What is an automatic lookup?",
-    "options": [
-      "A lookup that runs only when a user types the lookup command",
-      "A configured lookup that enriches matching events automatically at search time",
-      "A CSV file copied into every index bucket",
-      "A scheduled alert action"
-    ],
-    "answer": 1,
-    "explanation": "An automatic lookup is configured to apply at search time without requiring the user to type the lookup command.",
-    "whyWrong": [
-      "That describes a manual lookup invocation.",
-      "",
-      "Lookup files are not copied into every bucket.",
-      "An alert action is unrelated to automatic lookup enrichment."
-    ],
-    "tip": "Automatic lookups apply transparently at search time.",
-    "difficulty": "medium",
-    "tags": [
-      "automatic lookup",
-      "knowledge objects"
-    ]
-  },
-  {
-    "id": 225,
-    "domain": "alerts",
-    "q": "What distinguishes an alert from a scheduled report?",
-    "options": [
-      "Only alerts can run searches",
-      "An alert evaluates a trigger condition and can perform an action",
-      "Scheduled reports always run in real time",
-      "Alerts cannot be scheduled"
-    ],
-    "answer": 1,
-    "explanation": "An alert runs a search, evaluates trigger criteria, and can perform actions such as sending a notification.",
-    "whyWrong": [
-      "Both alerts and scheduled reports run searches.",
-      "",
-      "Scheduled reports commonly run on schedules, not necessarily in real time.",
-      "Alerts can be scheduled or configured as real-time alerts."
-    ],
-    "tip": "Report delivers results; alert reacts to a condition.",
-    "difficulty": "easy",
-    "tags": [
-      "alerts",
-      "scheduled reports"
-    ]
-  },
-  {
-    "id": 226,
-    "domain": "alerts",
-    "q": "Why is alert throttling used?",
-    "options": [
-      "To delete duplicate indexed events",
-      "To suppress repeated alert actions for a defined period",
-      "To make every alert real time",
-      "To increase the number of notifications"
-    ],
-    "answer": 1,
-    "explanation": "Throttling prevents repeated notifications or actions for the same condition during a defined suppression window.",
-    "whyWrong": [
-      "Throttling affects alert actions, not stored events.",
-      "",
-      "It does not change an alert into a real-time alert.",
-      "Its purpose is to reduce duplicate noise, not increase it."
-    ],
-    "tip": "Throttle = suppress repeat notifications and reduce alert fatigue.",
-    "difficulty": "easy",
-    "tags": [
-      "alerts",
-      "throttling"
-    ]
-  },
-  {
-    "id": 227,
-    "domain": "alerts",
-    "q": "A scheduled alert should notify only when failed logins exceed 20. What must be configured?",
-    "options": [
-      "A trigger condition based on the result count",
-      "A new sourcetype",
-      "A dashboard token",
-      "An automatic lookup"
-    ],
-    "answer": 0,
-    "explanation": "The alert needs a trigger condition that evaluates whether the search result count exceeds the threshold.",
-    "whyWrong": [
-      "",
-      "Sourcetype classifies data and does not define the alert threshold.",
-      "Dashboard tokens control dashboard behavior.",
-      "A lookup enriches data but does not create the alert condition."
-    ],
-    "tip": "Threshold wording in a question points to alert trigger conditions.",
-    "difficulty": "medium",
-    "tags": [
-      "trigger condition",
-      "threshold"
-    ]
-  },
-  {
-    "id": 228,
-    "domain": "searching",
-    "q": "Which action pauses a running search but keeps the search job available to continue?",
-    "options": [
-      "Stop",
-      "Pause",
-      "Delete",
-      "Export"
-    ],
-    "answer": 1,
-    "explanation": "Pause temporarily halts processing while preserving the search job so it can be resumed.",
-    "whyWrong": [
-      "Stop ends the running search job.",
-      "",
-      "Delete is not the normal job-control action for temporarily halting a search.",
-      "Export saves results and does not pause processing."
-    ],
-    "tip": "Pause is temporary; stop ends the search.",
-    "difficulty": "easy",
-    "tags": [
-      "job controls",
-      "pause"
-    ]
-  },
-  {
-    "id": 229,
-    "domain": "reports",
-    "q": "Which SPL command is designed specifically to aggregate values over time using _time?",
-    "options": [
-      "chart",
-      "timechart",
-      "table",
-      "top"
-    ],
-    "answer": 1,
-    "explanation": "timechart creates time-based statistical results and uses _time as the horizontal axis.",
-    "whyWrong": [
-      "chart can aggregate categories but is not specifically time-based.",
-      "",
-      "table formats fields into columns.",
-      "top ranks common values."
-    ],
-    "tip": "When the question says 'over time,' think timechart.",
-    "difficulty": "easy",
-    "tags": [
-      "timechart",
-      "visualization"
-    ]
-  }
-],
-
   questionBank: [
     { id: 1, domain: "basics", q: "Which Splunk component normally receives, indexes, and stores incoming data?", options: ["Search head", "Indexer", "Dashboard", "App"], answer: 1, explanation: "The indexer processes incoming data into searchable events, builds index files, and stores the indexed data." },
     { id: 2, domain: "basics", q: "What is the primary purpose of a Splunk search head?", options: ["Collect endpoint data", "Store raw data permanently", "Coordinate searches and present results", "Replace all forwarders"], answer: 2, explanation: "The search head provides the search interface, dispatches searches, and presents reports and dashboards." },
@@ -1139,5 +411,1254 @@ window.SPLUNK_HUB_DATA = {
 { id: 88, domain: "reports", q: "A dashboard panel is based on a report. Which is true?", options: ["You can edit the search directly in the panel", "Changes to the report can affect dashboards using that report", "The report cannot be reused", "Panels based on reports cannot be visualized"], answer: 1, explanation: "Panels backed by reports depend on that report, so report changes can affect dashboards using it." },
 { id: 89, domain: "language", q: "Which command removes duplicate results based on a field?", options: ["sort", "fields", "dedup", "rename"], answer: 2, explanation: "dedup removes duplicate field values while keeping results according to current search order." },
 { id: 90, domain: "transforming", q: "Which search returns the top 5 most common values of host?", options: ["index=web | stats top 5 BY host", "index=web | top host limit=5", "index=web | rare host limit=5", "index=web | stats count(host)=5"], answer: 1, explanation: "top host limit=5 returns the five most frequent host values." }
-  ]
+  ],
+
+  mockExamBank3: [
+  {
+    "id": "b3-1",
+    "domain": "reports",
+    "q": "When editing a dashboard panel that is based on the report, which of the following is true?",
+    "options": [
+      "You can modify the search string in the panel and you can change and configure the visualization",
+      "You can modify the search string in the panel, but you cannot change and configure the visualization",
+      "You cannot modify the search string in a panel, but you can change and configure the visualization",
+      "You cannot modify the search string in a panel and you cannot change and configure the visualization"
+    ],
+    "answer": 2,
+    "explanation": "When a dashboard panel is based on a report, the search logic is inherited from the report and is not editable directly within the panel. However, the panel's visualization settings such as chart type, formatting, and display options can be modified independently.",
+    "source": "Cleaned Community Bank"
+  },
+  {
+    "id": "b3-2",
+    "domain": "transforming",
+    "q": "Which of the following are common constraints of the top command?",
+    "options": [
+      "Limit count",
+      "Limit showperc",
+      "limit count field",
+      "showperc count field"
+    ],
+    "answer": 1,
+    "explanation": "The top command commonly uses the limit constraint to control how many values are returned and the showperc constraint to display each values percentage of the total.",
+    "source": "Cleaned Community Bank"
+  },
+  {
+    "id": "b3-3",
+    "domain": "reports",
+    "q": "When displaying results of a search, which of the following is true about line charts?",
+    "options": [
+      "Line charts are optimal for single and multiple series",
+      "Line charts are optimal for single series when using fast mode",
+      "Line charts are optimal for multiple series with three or more columns",
+      "Line charts are optimal for multi- series searches with at least two or more columns"
+    ],
+    "answer": 3,
+    "explanation": "Line charts in Splunk are designed to visualize trends over time and work best when displaying multiple series where each series is represented by a separate field or column. This allows meaningful comparison across related data sets on the same time axis.",
+    "source": "Cleaned Community Bank"
+  },
+  {
+    "id": "b3-4",
+    "domain": "searching",
+    "q": "How are events displayed after a search is executed?",
+    "options": [
+      "in chronological order",
+      "randomly by default",
+      "in reverse chronological order",
+      "alphabetically according to field name"
+    ],
+    "answer": 2,
+    "explanation": "By default, Splunk displays searched results with the most recent events first. This allows analysts to immediately see the latest activity without changing any settings.",
+    "source": "Cleaned Community Bank"
+  },
+  {
+    "id": "b3-5",
+    "domain": "searching",
+    "q": "Which of the following is true about user account settings and preferences?",
+    "options": [
+      "Search and reporting is the only app that can be set as the default application",
+      "Full names can only be changed by accounts with a power user or admin role",
+      "Time zones are automatically updated based on the setting of the computer accessing Splunk",
+      "Full name, time zone, and default app can be defined by clicking the login name in the Splunk bar"
+    ],
+    "answer": 3,
+    "explanation": "User account preferences in Splunk allow each user to configure their own full name, time zone, and default app directly from the user menu accessed by clicking their login name. These settings are user specific and do not require elevated privileges.",
+    "source": "Cleaned Community Bank"
+  },
+  {
+    "id": "b3-6",
+    "domain": "alerts",
+    "q": "What is a primary function of a scheduled report?",
+    "options": [
+      "Autodetect changes in performance",
+      "Autogenerated PDF reports of overall data trends",
+      "Regularly scheduled archiving to keep disk space use low",
+      "Triggering an alert in your Splunk instance when certain conditions are met"
+    ],
+    "answer": 3,
+    "explanation": "A scheduled report runs a search on a defined schedule and evaluates its results. One of its primary functions is to act as the underlying mechanism for alerts triggering notifications or actions when specified conditions are satisfied.",
+    "source": "Cleaned Community Bank"
+  },
+  {
+    "id": "b3-7",
+    "domain": "searching",
+    "q": "After running a search, what effect does clicking and dragging across the timeline have?",
+    "options": [
+      "executes a new search?",
+      "filters current search results",
+      "moves to past or future events",
+      "expands the time range of the search"
+    ],
+    "answer": 1,
+    "explanation": "Clicking and dragging across the timeline narrows the time range of the already executed search. The existing results are filtered to only include events within the selected time window. The search is not rewritten, only constrained by time.",
+    "source": "Cleaned Community Bank"
+  },
+  {
+    "id": "b3-8",
+    "domain": "lookups",
+    "q": "Which command is used to review the contents of a specified static lookup file?",
+    "options": [
+      "lookup,",
+      "CSV lookup,",
+      "input lookup,",
+      "output lookup"
+    ],
+    "answer": 2,
+    "explanation": "The input lookup command is used to view and search the contents of a static lookup file, such as a CSV, without writing results back to the file. It allows you to inspect lookup data directly within a search.",
+    "source": "Cleaned Community Bank"
+  },
+  {
+    "id": "b3-9",
+    "domain": "language",
+    "q": "When sorting on multiple fields with the sort command, what delimiter can be used between the field names in the search?",
+    "options": [
+      "pipe,",
+      "dollar,",
+      "exclamation,",
+      "comma"
+    ],
+    "answer": 3,
+    "explanation": "When using the sort command with multiple fields in Splunk, field names are separated by commas. This allows sorting to be applied in sequence, first by the leftmost field, then by subsequent fields.",
+    "source": "Cleaned Community Bank"
+  },
+  {
+    "id": "b3-10",
+    "domain": "searching",
+    "q": "Which time range picker configuration would return real-time events for the past 30 seconds?",
+    "options": [
+      "Preset relative 30 seconds ago",
+      "relative earliest 30 seconds ago latest now",
+      "Realtime earliest 30 seconds ago latest now",
+      "advanced earliest 30 seconds ago latest now"
+    ],
+    "answer": 2,
+    "explanation": "This configuration enables a real-time search window that continuously updates while only displaying events from the last 30 seconds. Realtime mode is required to stream incoming events as they occur.",
+    "source": "Cleaned Community Bank"
+  },
+  {
+    "id": "b3-11",
+    "domain": "alerts",
+    "q": "In the Splunk alerts interface, the list of alerts can be filtered based on which characteristics?",
+    "options": [
+      "app owner severity and type",
+      "app owner priority and status",
+      "app dashboard severity and type",
+      "app time window type and severity"
+    ],
+    "answer": 1,
+    "explanation": "In the Splunk alerts interface, alerts [snorts] can be filtered by the application they belong to, the owner who created them, their priority level, and their current status, such as enabled or disabled. These filters help manage and locate alerts efficiently in environments with many alerts.",
+    "source": "Cleaned Community Bank"
+  },
+  {
+    "id": "b3-12",
+    "domain": "alerts",
+    "q": "What are the steps to schedule a report?",
+    "options": [
+      "After saving the report, click schedule",
+      "After saving the report, click event type",
+      "After saving the report, click scheduling",
+      "After saving the report, click dashboard panel"
+    ],
+    "answer": 0,
+    "explanation": "In Splunk, a report must first be saved. Once saved, the schedule option becomes available, allowing you to define when and how often the report runs along with any related actions.",
+    "source": "Cleaned Community Bank"
+  },
+  {
+    "id": "b3-13",
+    "domain": "fields",
+    "q": "In the field sidebar, what indicates that a field is numeric?",
+    "options": [
+      "a number to the right of the field name?",
+      "a hash symbol to the left of the field name?",
+      "a lowercase N to the left of the field name",
+      "a lowercase N to the right of the field name"
+    ],
+    "answer": 1,
+    "explanation": "In the Splunk field sidebar, a hash icon indicates that the field contains numeric values. Splunk uses these icons to quickly communicate the data type of fields for analysis and visualization purposes.",
+    "source": "Cleaned Community Bank"
+  },
+  {
+    "id": "b3-14",
+    "domain": "transforming",
+    "q": "Which of the following are functions of the stats command?",
+    "options": [
+      "Count sum add",
+      "Count sum less",
+      "Sum average values",
+      "Sum values table"
+    ],
+    "answer": 2,
+    "explanation": "These are valid statistical functions provided by the stats command. Sum calculates totals. Average [snorts] calculates the average and values returns the unique values for a field.",
+    "source": "Cleaned Community Bank"
+  },
+  {
+    "id": "b3-15",
+    "domain": "fields",
+    "q": "Where does Splunk store the event timestamp value?",
+    "options": [
+      "_time",
+      "time",
+      "event_time",
+      "timestamp"
+    ],
+    "answer": 0,
+    "explanation": "At index time, Splunk stores the event timestamp in the internal field underscore time. This field is used for timebased indexing, searching and ordering of events and it is fundamental to how Splunk processes and retrieves data efficiently.",
+    "source": "Cleaned Community Bank"
+  },
+  {
+    "id": "b3-16",
+    "domain": "language",
+    "q": "Which of the following is a best practice when writing a search string?",
+    "options": [
+      "Include all formatting commands before any search terms",
+      "Include at least one function as this is a search requirement",
+      "Include the search terms at the beginning of the search string",
+      "Avoid using formatting clauses as they add too much overhead"
+    ],
+    "answer": 2,
+    "explanation": "Best practice in Splunk is to place search terms and filters as early as possible. This reduces the amount of data processed by subsequent commands and improves overall search performance.",
+    "source": "Cleaned Community Bank"
+  },
+  {
+    "id": "b3-17",
+    "domain": "reports",
+    "q": "What type of search can be saved as a report?",
+    "options": [
+      "Any search can be saved as a report",
+      "Only searches that generate visualizations",
+      "Only searches containing a transforming command",
+      "Only searches that generate statistics or visualizations"
+    ],
+    "answer": 0,
+    "explanation": "In Splunk, any valid search can be saved as a report. Whether it is a simple event search, a transforming search, or one that produces statistics or visualizations. Transforming searches are required only if the report is intended to generate visualizations, not for saving the report itself.",
+    "source": "Cleaned Community Bank"
+  },
+  {
+    "id": "b3-18",
+    "domain": "searching",
+    "q": "What can be included in the all fields option in the sidebar?",
+    "options": [
+      "Dashboards",
+      "Metadata only",
+      "Non-interesting fields",
+      "Field descriptions"
+    ],
+    "answer": 2,
+    "explanation": "The all field section in the field sidebar contains every field present in the search results, including those that Splunk does not classify as interesting. This allows users to manually add less frequently used or less prominent fields to selected fields.",
+    "source": "Cleaned Community Bank"
+  },
+  {
+    "id": "b3-19",
+    "domain": "fields",
+    "q": "When viewing the results of a search, what is an interesting field?",
+    "options": [
+      "A field that appears in any event",
+      "a field that appears in every event",
+      "A field that appears in the top 10 events",
+      "A field that appears in at least 20% of the events"
+    ],
+    "answer": 3,
+    "explanation": "In Splunk, an interesting field is one that occurs in a significant portion of the return events, typically at least 20%. These fields are surfaced to help users quickly identify commonly occurring and potentially useful dimensions for analysis.",
+    "source": "Cleaned Community Bank"
+  },
+  {
+    "id": "b3-20",
+    "domain": "basics",
+    "q": "When a Splunk search generates calculated data that appears in the statistics tab, in what formats can the results be exported?",
+    "options": [
+      "CSV, JSON, PDF",
+      "CSV, XML, JSON",
+      "Raw events, XML, JSON",
+      "Raw events, CSV, XML, JSON"
+    ],
+    "answer": 1,
+    "explanation": "When a Splunk search produces calculated results that appear in the statistics tab, those results can be exported in structured data formats suitable for further processing or integration. The supported export formats are CSV, XML, and JSON.",
+    "source": "Cleaned Community Bank"
+  },
+  {
+    "id": "b3-21",
+    "domain": "searching",
+    "q": "Which of the following is the most efficient filter for running searches in Splunk?",
+    "options": [
+      "time,",
+      "fast mode,",
+      "sourcetype,",
+      "selected fields"
+    ],
+    "answer": 0,
+    "explanation": "Time is the most efficient filter in Splunk because it limits the amount of index data that must be scanned before any other processing occurs. Time constraints are applied at the index level, dramatically reducing I/O and improving search performance.",
+    "source": "Cleaned Community Bank"
+  },
+  {
+    "id": "b3-22",
+    "domain": "searching",
+    "q": "How does Splunk determine which fields to extract from data?",
+    "options": [
+      "Splunk only extracts the most interesting data from the last 24 hours",
+      "Splunk only extracts fields users have manually specified in their data",
+      "Splunk automatically extracts any fields that generate interesting visualizations",
+      "Splunk automatically discovers many fields based on sourcetype and key value pairs found in the data"
+    ],
+    "answer": 3,
+    "explanation": "Splunk performs automatic field extraction at search time using the assigned sourcetype and by detecting common patterns such as key value pairs within the raw event data. This allows fields to be extracted without manual definition.",
+    "source": "Cleaned Community Bank"
+  },
+  {
+    "id": "b3-23",
+    "domain": "searching",
+    "q": "Which of the following file types is an option for exporting Splunk search results?",
+    "options": [
+      "PDF,",
+      "JSON,",
+      "XLS,",
+      "RTF"
+    ],
+    "answer": 2,
+    "explanation": "Splunk allows search results to be exported in several formats, including CSV, XML, and Excel spreadsheet format. XLS is a supported export option for search results from the Splunk UI.",
+    "source": "Cleaned Community Bank"
+  },
+  {
+    "id": "b3-24",
+    "domain": "language",
+    "q": "What syntax is used to link key value pairs in search strings?",
+    "options": [
+      "Parentheses",
+      "Add or hash symbols",
+      "Quotation marks",
+      "relational operations such as equals, less than, or greater than"
+    ],
+    "answer": 3,
+    "explanation": "In Splunk search syntax, key and value pairs are linked using relational operators. The most common is the equal sign, but other operators such as less than or greater than can also be used depending on the comparison required.",
+    "source": "Cleaned Community Bank"
+  },
+  {
+    "id": "b3-25",
+    "domain": "fields",
+    "q": "Which search would return events from the access_combined sourcetype?",
+    "options": [
+      "sourcetype=access_combined",
+      "Sourcetype=access_combined",
+      "sourcetype=ACCESS_COMBINED",
+      "source=access_combined"
+    ],
+    "answer": 0,
+    "explanation": "Field values are not case-sensitive. So, access combined is matched correctly.",
+    "source": "Cleaned Community Bank"
+  },
+  {
+    "id": "b3-26",
+    "domain": "searching",
+    "q": "Which index search would provide the most efficient search performance?",
+    "options": [
+      "error",
+      "index=* error",
+      "index=web OR index=security error",
+      "sourcetype=* error"
+    ],
+    "answer": 2,
+    "explanation": "Clearly defined index constraints provide the best performance.",
+    "source": "Cleaned Community Bank"
+  },
+  {
+    "id": "b3-27",
+    "domain": "reports",
+    "q": "What is a suggested Splunk best practice for naming reports?",
+    "options": [
+      "Reports are best named using many numbers so they can be more easily sorted",
+      "Use a consistent naming convention so they are easily separated by characteristics such as group and object",
+      "Name reports as uniquely as possible with no overlap to differentiate them from one another",
+      "Any naming convention is fine as long as you keep an external spreadsheet to keep track"
+    ],
+    "answer": 1,
+    "explanation": "Splunk best practice recommends using a consistent structured naming convention for reports. This makes reports easier to organize, search, maintain, and reuse, especially in environments with many users and knowledge objects.",
+    "source": "Cleaned Community Bank"
+  },
+  {
+    "id": "b3-28",
+    "domain": "language",
+    "q": "In a deployment with multiple indexes, what will happen when a search is run and an index is not specified in the search string?",
+    "options": [
+      "No events will be returned",
+      "Splunk will prompt you to specify an index",
+      "All non-indexed events to which the user has access will be returned",
+      "Events from every index searched by default to which the user has access will be returned"
+    ],
+    "answer": 3,
+    "explanation": "When no index is specified in a Splunk search, Splunk searches all default indexes that the user has permission to access. The exact set of indexes depend on the user's role configuration.",
+    "source": "Cleaned Community Bank"
+  },
+  {
+    "id": "b3-29",
+    "domain": "searching",
+    "q": "When looking at a statistics table, what is one way to drill down to see the underlying events?",
+    "options": [
+      "Creating a pivot table",
+      "Clicking on the visualizations tab",
+      "Viewing your report in a dashboard",
+      "Clicking on any field value in the table"
+    ],
+    "answer": 3,
+    "explanation": "In Splunk, statistics tables support drill down by default. Clicking on a field value applies that value as a filter and allows you to view the underlying events that contributed to the statistic.",
+    "source": "Cleaned Community Bank"
+  },
+  {
+    "id": "b3-30",
+    "domain": "language",
+    "q": "Which SPL syntax counts the number of events containing the vendor_action field?",
+    "options": [
+      "| stats values(vendor_action)",
+      "| stats dc(vendor_action)",
+      "| stats count(vendor_action)",
+      "| stats sum(vendor_action)"
+    ],
+    "answer": 2,
+    "explanation": "Using count vendor action returns the number of events that contain the vendor action field.",
+    "source": "Cleaned Community Bank"
+  },
+  {
+    "id": "b3-31",
+    "domain": "reports",
+    "q": "What is one benefit of creating dashboard panels from reports?",
+    "options": [
+      "Any newly created dashboard will include that report",
+      "There are no benefits to creating dashboard panels from reports",
+      "It makes the dashboard more efficient because it only has to run one search string",
+      "Any change to the underlying report will affect every dashboard that utilizes that report"
+    ],
+    "answer": 3,
+    "explanation": "When dashboard panels are created from reports, they reference the reports search logic. Updating the report automatically updates all dashboards that use it, ensuring consistency and reducing duplicated maintenance.",
+    "source": "Cleaned Community Bank"
+  },
+  {
+    "id": "b3-32",
+    "domain": "fields",
+    "q": "By default, which of the following fields will be listed in the fields sidebar under interesting fields?",
+    "options": [
+      "host,",
+      "index,",
+      "source,",
+      "sourcetype"
+    ],
+    "answer": 0,
+    "explanation": "By default, the interesting fields list shows fields that appear frequently in the current search results and provide analytical value. The host field commonly varies across events and is therefore surfaced as an interesting field.",
+    "source": "Cleaned Community Bank"
+  },
+  {
+    "id": "b3-33",
+    "domain": "searching",
+    "q": "Which of the following statements about case sensitivity is true?",
+    "options": [
+      "Both field names and field values are case sensitive?",
+      "Field names are case-sensitive. Field values are not",
+      "Field values are case-sensitive. Field names are not",
+      "Both field names and field values are not case-sensitive"
+    ],
+    "answer": 1,
+    "explanation": "Field values are not. In Splunk searches, field names must match the exact case as defined in the data model or extraction. Field values, however, are case insensitive by default unless explicitly handled otherwise using functions or commands that enforce case sensitivity.",
+    "source": "Cleaned Community Bank"
+  },
+  {
+    "id": "b3-34",
+    "domain": "transforming",
+    "q": "What does the rare command do?",
+    "options": [
+      "returns the least common field values of a given field in the results",
+      "returns the most common field values of a given field in the results",
+      "returns the top 10 field values of a given field in the results",
+      "returns the lowest 10 field values of a given field in the results"
+    ],
+    "answer": 0,
+    "explanation": "The rare command in Splunk is used to identify uncommon or infrequent values within a specified field. It is essentially the inverse of the top command and is useful for spotting anomalies or unusual behavior.",
+    "source": "Cleaned Community Bank"
+  },
+  {
+    "id": "b3-35",
+    "domain": "alerts",
+    "q": "When an alert action runs a script, which directory is one location Splunk checks for the script?",
+    "options": [
+      "$SPLUNK_HOME/bin/scripts",
+      "$SPLUNK_HOME/etc/apps",
+      "$SPLUNK_HOME/var/run",
+      "$SPLUNK_HOME/share"
+    ],
+    "answer": 0,
+    "explanation": "One of the default locations Splunk checks is Splunk home bin scripts.",
+    "source": "Cleaned Community Bank"
+  },
+  {
+    "id": "b3-36",
+    "domain": "language",
+    "q": "is A. Which boolean operator is always implied between two search terms unless otherwise specified",
+    "options": [
+      "or",
+      "not",
+      "N",
+      "X or"
+    ],
+    "answer": 2,
+    "explanation": "In Splunk searches, when multiple search terms are written next to each other without an explicit boolean operator, Splunk implicitly applies and. This means all specified terms must be present in an event for it to be returned.",
+    "source": "Cleaned Community Bank"
+  },
+  {
+    "id": "b3-37",
+    "domain": "transforming",
+    "q": "What does the values function of the stats command do?",
+    "options": [
+      "lists all values of a given field",
+      "lists unique values of a given field",
+      "returns a count of unique values for a given field",
+      "returns the number of events that match the search"
+    ],
+    "answer": 1,
+    "explanation": "The values function in the stats command returns a list of distinct unique values that appear in the specified field across the search results. Duplicate values are removed making it useful for understanding the range of different values present.",
+    "source": "Cleaned Community Bank"
+  },
+  {
+    "id": "b3-38",
+    "domain": "transforming",
+    "q": "Which stats function returns the number of unique values for a field?",
+    "options": [
+      "dc(field)",
+      "count(field)",
+      "values(field)",
+      "sum(field)"
+    ],
+    "answer": 0,
+    "explanation": "It is specifically designed to count distinct occurrences.",
+    "source": "Cleaned Community Bank"
+  },
+  {
+    "id": "b3-39",
+    "domain": "searching",
+    "q": "A collection of items containing things such as data inputs, UI elements, and knowledge objects is known as what?",
+    "options": [
+      "An app",
+      "JSON",
+      "A role",
+      "An enhanced solution"
+    ],
+    "answer": 0,
+    "explanation": "In Splunk, an app is a packaged collection of components such as data inputs, dashboards, reports, alerts, lookups, field extractions, and other knowledge objects. Apps provide a structured way to deliver functionality, and organize related resources.",
+    "source": "Cleaned Community Bank"
+  },
+  {
+    "id": "b3-40",
+    "domain": "searching",
+    "q": "Which of the following is an option after clicking an item in search results?",
+    "options": [
+      "Saving the item to a report",
+      "Adding the item to the search",
+      "Adding the item to a dashboard",
+      "Saving the search to a JSON file"
+    ],
+    "answer": 1,
+    "explanation": "Clicking an item in the search results provides interactive options such as adding that value to the current search as the filter. This allows quick refinement of the search without manually editing the search string.",
+    "source": "Cleaned Community Bank"
+  },
+  {
+    "id": "b3-41",
+    "domain": "searching",
+    "q": "Which of the following fields is stored with the events in the index?",
+    "options": [
+      "user,",
+      "source,",
+      "location,",
+      "sourcetype"
+    ],
+    "answer": 1,
+    "explanation": "The source field is one of Splunk's default metadata fields and is stored with each event at index time. It identifies the origin of the data such as file path or input source and is always available for searching.",
+    "source": "Cleaned Community Bank"
+  },
+  {
+    "id": "b3-42",
+    "domain": "reports",
+    "q": "Which of the following is the recommended way to create multiple dashboards displaying data from the same search?",
+    "options": [
+      "Save the search as a report and use it in multiple dashboards as needed",
+      "Save the search as a dashboard panel for each dashboard that needs the data",
+      "Save the search as a scheduled alert and use it in multiple dashboards as needed",
+      "Export the results of the search to an XML file and use the file as the basis of the dashboards"
+    ],
+    "answer": 0,
+    "explanation": "Save the search as a report and use it in multiple dashboards as needed. This is the recommended approach because a report centralizes the search logic. Any update to the report automatically propagates to all dashboards that reference it ensuring consistency and reducing maintenance effort.",
+    "source": "Cleaned Community Bank"
+  },
+  {
+    "id": "b3-43",
+    "domain": "searching",
+    "q": "What does the following specified time range do?",
+    "options": [
+      "Look back three days ago and prior",
+      "Look back 72 hours up to one day ago",
+      "Look back 72 hours up to the end of today",
+      "Look back from 3 days ago up to the beginning of today"
+    ],
+    "answer": 3,
+    "explanation": "The earliest value means 72 hours ago snapped to the start of the hour. The latest value means the beginning of the current day. The range therefore spans from 3 days ago to the start of today.",
+    "source": "Cleaned Community Bank"
+  },
+  {
+    "id": "b3-44",
+    "domain": "language",
+    "q": "Which events will be returned by the following search string?",
+    "options": [
+      "All events that either have a host of www3 or a status of 503",
+      "All events with a host of www3 that also have a status of 503",
+      "We need more information. We cannot tell without knowing the time range",
+      "We need more information. A search cannot be run without specifying an index"
+    ],
+    "answer": 1,
+    "explanation": "This means both conditions must be true for an event to be returned.",
+    "source": "Cleaned Community Bank"
+  },
+  {
+    "id": "b3-45",
+    "domain": "transforming",
+    "q": "What does the stats command do?",
+    "options": [
+      "automatically correlates related fields",
+      "converts field values into numerical values",
+      "calculates statistics on data that matches the search criteria",
+      "analyzes numerical fields for their ability to predict another discrete field"
+    ],
+    "answer": 2,
+    "explanation": "The stats command is used to perform statistical calculations such as count, sum, average, min, max, DC, and values on the results returned by a search. It transforms raw events into aggregated results suitable for analysis and visualization.",
+    "source": "Cleaned Community Bank"
+  },
+  {
+    "id": "b3-46",
+    "domain": "searching",
+    "q": "Which is the primary function of the timeline located under the search bar?",
+    "options": [
+      "to differentiate between structured and unstructured events in the data",
+      "to sort the events returned by the search command in chronological order",
+      "to zoom in and zoom out, although this does not change the scale of the chart",
+      "to show peaks and or valleys in the timeline, which can indicate spikes in activity or downtime"
+    ],
+    "answer": 3,
+    "explanation": "The timeline visualizes event distribution over time. Peaks indicates bursts of activity. Valleys indicate reduced or missing activity. This helps identify anomalies, trends, outages, or sudden changes at a glance.",
+    "source": "Cleaned Community Bank"
+  },
+  {
+    "id": "b3-47",
+    "domain": "searching",
+    "q": "What can be configured using the edit job settings menu?",
+    "options": [
+      "Export the result to CSV format",
+      "Add the job results to a dashboard",
+      "Schedule the job to rerun in 10 minutes",
+      "Change job lifetime from 10 minutes to 7 days"
+    ],
+    "answer": 3,
+    "explanation": "The edit job settings menu allows you to modify properties of the running or completed search job, including extending the job lifetime. This controls how long the job and its results are retained before being removed.",
+    "source": "Cleaned Community Bank"
+  },
+  {
+    "id": "b3-48",
+    "domain": "lookups",
+    "q": "Which command can be used to validate or review a lookup file?",
+    "options": [
+      "lookup",
+      "outputlookup",
+      "inputlookup",
+      "table"
+    ],
+    "answer": 2,
+    "explanation": "Running it with a leading pipe allows Splunk to load the lookup directly and verify that the file exists, is accessible, and is properly formatted.",
+    "source": "Cleaned Community Bank"
+  },
+  {
+    "id": "b3-49",
+    "domain": "transforming",
+    "q": "Which statement is true about the top command?",
+    "options": [
+      "It returns the top 10 results",
+      "It displays the output in table format",
+      "It returns the count and percent columns per row",
+      "All of the above"
+    ],
+    "answer": 3,
+    "explanation": "The top command returns the most common values of a field, defaults to the top 10 results, displays the output in a table format, and includes both count and percent columns for each value unless configured otherwise.",
+    "source": "Cleaned Community Bank"
+  },
+  {
+    "id": "b3-50",
+    "domain": "alerts",
+    "q": "Which of the following is true about Splunk alerts?",
+    "options": [
+      "Alerts are based on searches that are either run on a scheduled interval or in real time",
+      "Alerts are based on searches and when triggered will only send an email notification",
+      "Alerts are based on searches and require cron to run on schedule interval",
+      "Alerts are based on searches that are run exclusively as real time"
+    ],
+    "answer": 0,
+    "explanation": "Splunk alerts are built on saved searches and can be configured to run either on a schedule or in real time. When alert conditions are met, the configured alert actions are triggered.",
+    "source": "Cleaned Community Bank"
+  },
+  {
+    "id": "b3-51",
+    "domain": "transforming",
+    "q": "What is the purpose of using a by clause with the stats command?",
+    "options": [
+      "to group the results by one or more fields",
+      "to compute numerical statistics on each field",
+      "to specify how the values in a list are delimited",
+      "to partition the input data based on the split by fields"
+    ],
+    "answer": 0,
+    "explanation": "The by clause in the stats command groups events based on one or more specified fields and then computes the requested statistics separately for each group. This is how stats produces aggregated results per field value instead of a single overall result.",
+    "source": "Cleaned Community Bank"
+  },
+  {
+    "id": "b3-52",
+    "domain": "searching",
+    "q": "How do you add or remove fields from search results?",
+    "options": [
+      "Use field plus to add and field minus to remove",
+      "Use table plus to add and table minus to remove",
+      "Use fields plus to add and fields minus to remove",
+      "Use fields plus to add and fields minus to remove"
+    ],
+    "answer": 2,
+    "explanation": "The fields command controls which fields are included or excluded from search results. Using fields plus field names explicitly adds fields to the results while fields minus field name removes fields from the results.",
+    "source": "Cleaned Community Bank"
+  },
+  {
+    "id": "b3-53",
+    "domain": "fields",
+    "q": "A field exists in search results but isn't being displayed in the field sidebar. How can it be added to the fields sidebar?",
+    "options": [
+      "Click all fields and select the field to add it to selected fields",
+      "Click interesting fields and select the field to add it to selected fields",
+      "Click selected fields and select the field to add it to interesting fields",
+      "This scenario isn't possible because all fields returned from a search always appear in the field sidebar"
+    ],
+    "answer": 0,
+    "explanation": "Click all fields and select the field to add it to selected fields. Fields that exist in the search results but are not currently shown in the sidebar can be found under all fields. From there, a field can be added to selected fields so it appears in the field sidebar for easier access.",
+    "source": "Cleaned Community Bank"
+  },
+  {
+    "id": "b3-54",
+    "domain": "fields",
+    "q": "In the field sidebar, which character denotes alpha numeric field values?",
+    "options": [
+      "hash,",
+      "percent,",
+      "A,",
+      "A hash"
+    ],
+    "answer": 3,
+    "explanation": "In the field sidebar, the aash icon indicates that a field contains both alphabetic and numeric values. Splunk uses these icons to quickly convey the data type characteristics of field values.",
+    "source": "Cleaned Community Bank"
+  },
+  {
+    "id": "b3-55",
+    "domain": "reports",
+    "q": "What is the main requirement for creating visualizations using the Splunk UI?",
+    "options": [
+      "Your search must transform event data into Excel file format first",
+      "Your search must transform event data into XML formatted data first",
+      "Your search must transform event data into statistical data tables first",
+      "Your search must transform event data into JSON formatted data first"
+    ],
+    "answer": 2,
+    "explanation": "Splunk visualizations are built on transforming searches. Commands such as stats, chart, time chart, top, and rare convert raw events into aggregated tables, which the Splunk UI can then render as charts, graphs, and other visualizations.",
+    "source": "Cleaned Community Bank"
+  },
+  {
+    "id": "b3-56",
+    "domain": "language",
+    "q": "What syntax is used to link key value pairs in search strings?",
+    "options": [
+      "Action plus purchase",
+      "Action equals purchase",
+      "Action pipe purchase",
+      "action equal purchase"
+    ],
+    "answer": 1,
+    "explanation": "In Splunk search syntax, key value pairs are linked using the equal sign. This specifies that the field action must have the value purchase for an event to match.",
+    "source": "Cleaned Community Bank"
+  },
+  {
+    "id": "b3-57",
+    "domain": "basics",
+    "q": "What user interface component allows for time selection?",
+    "options": [
+      "time summary",
+      "Time range picker",
+      "Search time picker",
+      "Data source time statistics"
+    ],
+    "answer": 1,
+    "explanation": "The time range picker is the user interface component in Splunk that allows users to select the time window for a search. It supports preset, relative, real time, and custom time ranges.",
+    "source": "Cleaned Community Bank"
+  },
+  {
+    "id": "b3-58",
+    "domain": "searching",
+    "q": "Which of the following searches will return results where fail 400 and error exist in every event?",
+    "options": [
+      "error and fail and 400",
+      "error or fail and 400",
+      "error and fail or 400",
+      "error or fail or 400"
+    ],
+    "answer": 0,
+    "explanation": "This search requires all three terms error, fail and 400 to be present in every return event. The parenthesis makes the logic explicit but effectively this is equivalent to error and fail and 400.",
+    "source": "Cleaned Community Bank"
+  },
+  {
+    "id": "b3-59",
+    "domain": "searching",
+    "q": "When placed early in a search, which command is most effective at reducing search execution time?",
+    "options": [
+      "dedup,",
+      "Rename,",
+      "Sort minus,",
+      "fields plus"
+    ],
+    "answer": 3,
+    "explanation": "Placing fields early in a search limits the number of fields that Splunk must carry forward through the pipeline. This reduces memory usage and processing overhead which can significantly improve search execution time especially on large result sets.",
+    "source": "Cleaned Community Bank"
+  },
+  {
+    "id": "b3-60",
+    "domain": "reports",
+    "q": "How can other users gain access to a saved report?",
+    "options": [
+      "The owner of the report can edit permissions from the edit drop-down",
+      "Only users with an admin or power user role can access other users reports",
+      "Anyone can access any reports marked as public within a shared Splunk deployment",
+      "The owner of the report must clone the original report and save it to their user account"
+    ],
+    "answer": 0,
+    "explanation": "In Splunk, access to a saved report is controlled through permissions. The report owner can share it by editing permissions, making it available to specific roles or to all users within the app or globally.",
+    "source": "Cleaned Community Bank"
+  },
+  {
+    "id": "b3-61",
+    "domain": "transforming",
+    "q": "What is the primary use for the rare command?",
+    "options": [
+      "to sort field values in descending order",
+      "To return only fields containing five or fewer values",
+      "to find the least common values of a field in a data set",
+      "To find the fields with the fewest number of values across a data set"
+    ],
+    "answer": 2,
+    "explanation": "The rare command is used to identify infrequently occurring field values. It is effectively the inverse of the top command and is commonly used for anomaly detection and spotting unusual behavior.",
+    "source": "Cleaned Community Bank"
+  },
+  {
+    "id": "b3-62",
+    "domain": "fields",
+    "q": "What happens when a field is added to the selected fields list in the field sidebar?",
+    "options": [
+      "Splunk will rerun the search job in verbose mode to prioritize the new selected field",
+      "Splunk will highlight related fields as a suggestion to add them to the selected fields list",
+      "Custom selections will replace the interesting fields that Splunk populated into the list at search time",
+      "The selected field and its corresponding values will appear underneath the events in the search results"
+    ],
+    "answer": 3,
+    "explanation": "Adding a field to selected fields causes Splunk to display that field and its values directly with each event in the events tab, making the data immediately visible without expanding individual events.",
+    "source": "Cleaned Community Bank"
+  },
+  {
+    "id": "b3-63",
+    "domain": "fields",
+    "q": "By default, which of the following is a selected field?",
+    "options": [
+      "action,",
+      "client IP,",
+      "category LD,",
+      "sourcetype"
+    ],
+    "answer": 3,
+    "explanation": "By default, Splunk includes certain metadata fields in selected fields such as sourcetype, source, and host. These fields are always available and displayed because they are indexed metadata.",
+    "source": "Cleaned Community Bank"
+  },
+  {
+    "id": "b3-64",
+    "domain": "language",
+    "q": "According to Splunk best practices, which wildcard placement is most efficient?",
+    "options": [
+      "*fail",
+      "f*ail",
+      "fail*",
+      "*fail*"
+    ],
+    "answer": 2,
+    "explanation": "Splunk best practice is to place wild cards at the end of the term. Trailing wild cards allow Splunk to efficiently leverage index terms whereas leading or embedded wild cards prevent efficient index usage and significantly degrade performance.",
+    "source": "Cleaned Community Bank"
+  },
+  {
+    "id": "b3-65",
+    "domain": "searching",
+    "q": "Which command automatically returns percent and count columns when executing searches?",
+    "options": [
+      "top,",
+      "stats,",
+      "table,",
+      "percent"
+    ],
+    "answer": 0,
+    "explanation": "The top command automatically returns both count and percent columns for each value by default. It is designed to show the most frequent field values along with how often they occur and the percentage of the total.",
+    "source": "Cleaned Community Bank"
+  },
+  {
+    "id": "b3-66",
+    "domain": "lookups",
+    "q": "Which of the following describes lookup files?",
+    "options": [
+      "Lookup fields cannot be used in searches",
+      "Lookups contain static data available in the index",
+      "Lookups add more fields to results returned by a search",
+      "Lookups pull data at index time and add them to search results"
+    ],
+    "answer": 2,
+    "explanation": "Lookup files are used at search time to enrich events by matching field values to external data and appending additional fields to the search results.",
+    "source": "Cleaned Community Bank"
+  },
+  {
+    "id": "b3-67",
+    "domain": "searching",
+    "q": "Which search matches only events with status code 404?",
+    "options": [
+      "status>=404",
+      "status>404 status<405",
+      "status=40*",
+      "status>403 status<405"
+    ],
+    "answer": 3,
+    "explanation": "So this search returns only events where status code is greater than 403 and less than 405. That range includes only the value 404.",
+    "source": "Cleaned Community Bank"
+  },
+  {
+    "id": "b3-68",
+    "domain": "searching",
+    "q": "What transforms raw data into events and distributes the results into an index?",
+    "options": [
+      "index,",
+      "search head,",
+      "indexer,",
+      "forwarder"
+    ],
+    "answer": 2,
+    "explanation": "The indexer receives raw data, parses it into individual events, assigns timestamps and metadata, and writes those events into indexes. It is the component that transforms raw data into searchable events and distributes them into the appropriate index.",
+    "source": "Cleaned Community Bank"
+  },
+  {
+    "id": "b3-69",
+    "domain": "basics",
+    "q": "Which Splunk component is primarily responsible for saving indexed data?",
+    "options": [
+      "Search head",
+      "Heavy forwarder",
+      "Indexer",
+      "Universal forwarder"
+    ],
+    "answer": 2,
+    "explanation": "The indexer is the Splunk component responsible for writing data to disk, indexing events, and managing data retention. All searchable data is ultimately stored on indexers.",
+    "source": "Cleaned Community Bank"
+  },
+  {
+    "id": "b3-70",
+    "domain": "basics",
+    "q": "Data sources being opened and read applies to",
+    "options": [
+      "None of the above,",
+      "indexing phase,",
+      "parsing phase,",
+      "input phase, E license metering"
+    ],
+    "answer": 3,
+    "explanation": "Data sources being opened and read occurs during the input phase where raw data is collected from files, streams or network sources before any parsing, transformation or indexing takes place.",
+    "source": "Cleaned Community Bank"
+  },
+  {
+    "id": "b3-71",
+    "domain": "searching",
+    "q": "Splunk's index-time process can be broken down into how many phases?",
+    "options": [
+      "Three",
+      "Two",
+      "Four",
+      "One"
+    ],
+    "answer": 0,
+    "explanation": "Splunk's index time process is broken down into three main phases. Input, parsing, and indexing. During input, data is collected. During parsing, events are broken, timestamps are extracted, and metadata is assigned. During indexing, the processed events are written to disk and stored in indexes.",
+    "source": "Cleaned Community Bank"
+  },
+  {
+    "id": "b3-72",
+    "domain": "basics",
+    "q": "Where does licensing meter happen?",
+    "options": [
+      "indexer,",
+      "parsing,",
+      "heavy forwarders,",
+      "input"
+    ],
+    "answer": 1,
+    "explanation": "Splunk licensing is based on the amount of data indexed per day and the license meter measures data volume during the parsing phase before indexing occurs. This ensures that all incoming data is accounted for regardless of whether it is later filtered or indexed.",
+    "source": "Cleaned Community Bank"
+  },
+  {
+    "id": "b3-73",
+    "domain": "language",
+    "q": "What is Search Assistant in Splunk?",
+    "options": [
+      "A feature available only to administrators",
+      "A feature that does not exist",
+      "A feature that suggests ways to complete the search string",
+      "A tool that indexes raw data"
+    ],
+    "answer": 2,
+    "explanation": "Search assistant in Splunk provides real-time guidance while typing SPL. It suggests commands, fields, functions, and syntax to help users build correct and efficient search strings.",
+    "source": "Cleaned Community Bank"
+  },
+  {
+    "id": "b3-74",
+    "domain": "searching",
+    "q": "The new data uploaded in Splunk are shown in",
+    "options": [
+      "real time,",
+      "10 minutes,",
+      "overnight download,",
+      "30 minutes"
+    ],
+    "answer": 0,
+    "explanation": "New data uploaded or ingested into Splunk becomes searchable and visible almost immediately. Splunk indexes data continuously, allowing users to see new events in real time without waiting for batch or scheduled processing.",
+    "source": "Cleaned Community Bank"
+  },
+  {
+    "id": "b3-75",
+    "domain": "searching",
+    "q": "Which of the statements is correct regarding the click and drag option in the timeline?",
+    "options": [
+      "The new result after selecting the range by dragging filters the events and displays the most recent first",
+      "There is no functionality like click and drag in Splunk's timeline",
+      "Using this option executes a new query",
+      "This doesn't execute a new query"
+    ],
+    "answer": 3,
+    "explanation": "Clicking and dragging on the timeline narrows the time range of the existing search results. Splunk filters the current job to the selected time window without rerunning the search.",
+    "source": "Cleaned Community Bank"
+  },
+  {
+    "id": "b3-76",
+    "domain": "fields",
+    "q": "In the Splunk web interface, what defines an interesting field?",
+    "options": [
+      "the field with the lowest entropy relative to the core search",
+      "the field that exists in at least 20% of the events in the search",
+      "the numeric field within the data which allows its use in charts and time charts",
+      "the field with the highest entropy relative to the core search"
+    ],
+    "answer": 1,
+    "explanation": "In the Splunk web interface, interesting fields are determined based on how frequently a field appears across the return events. By default, a field must exist in at least 20% of the events to be classified as interesting and shown in the interesting fields list.",
+    "source": "Cleaned Community Bank"
+  },
+  {
+    "id": "b3-77",
+    "domain": "searching",
+    "q": "What is the proper SPL terminology for specifying a particular index in a search?",
+    "options": [
+      "Index name equals index name",
+      "Indexer name equals index name",
+      "Indexer equals index name",
+      "Index equals index name"
+    ],
+    "answer": 3,
+    "explanation": "In SPL, specifying the index is done using the index field with an equals operator. This tells Splunk exactly which index or indexes to search, improving accuracy and performance.",
+    "source": "Cleaned Community Bank"
+  },
+  {
+    "id": "b3-78",
+    "domain": "lookups",
+    "q": "How can results from a specified static lookup file be displayed?",
+    "options": [
+      "Lookup command",
+      "Input lookup command",
+      "Settings lookups input",
+      "Settings lookups upload"
+    ],
+    "answer": 1,
+    "explanation": "The input lookup command is used to directly display the contents of a static lookup file in search results without requiring any event data. It reads the lookup table itself and returns the rows as search results which is the correct method when the goal is to view or inspect the lookup data.",
+    "source": "Cleaned Community Bank"
+  },
+  {
+    "id": "b3-79",
+    "domain": "language",
+    "q": "When is the pipe character used in search strings?",
+    "options": [
+      "before clauses",
+      "before commands",
+      "before arguments",
+      "before functions"
+    ],
+    "answer": 1,
+    "explanation": "It separates commands in the search pipeline, allowing sequential processing of data. For example, filtering events first, then transforming them with stats.",
+    "source": "Cleaned Community Bank"
+  },
+  {
+    "id": "b3-80",
+    "domain": "searching",
+    "q": "Which of the following does Splunk retain a search job?",
+    "options": [
+      "10 minutes,",
+      "15 minutes,",
+      "1 day,",
+      "7 days"
+    ],
+    "answer": 0,
+    "explanation": "By default, Splunk retains a search job for 10 minutes after it completes. This retention period applies to ad hoc searches and allows users to view results, inspect job details, or export data shortly after execution. After the time expires, the search job is automatically removed unless explicitly saved or TTL is extended through configuration.",
+    "source": "Cleaned Community Bank"
+  },
+  {
+    "id": "b3-81",
+    "domain": "basics",
+    "q": "Which of the following Splunk components typically resides on the machines where data originates?",
+    "options": [
+      "indexer,",
+      "Forwarder,",
+      "search head,",
+      "deployment server"
+    ],
+    "answer": 1,
+    "explanation": "The forwarder is installed on machines where data originates. Its role is to collect logs, metrics, and other machine data, then securely forward that data to an indexer for processing and storage. Forwarders are lightweight and designed to have minimal performance impact on source systems.",
+    "source": "Cleaned Community Bank"
+  },
+  {
+    "id": "b3-82",
+    "domain": "alerts",
+    "q": "What determines the scope of data that appears in a scheduled report?",
+    "options": [
+      "All data accessible to the user role will appear in the report",
+      "All data accessible to the owner of the report will appear in the report",
+      "All data accessible to all users will appear in the report until the next time the report is run",
+      "The owner of the report can configure permissions so that the report uses either the user role or the owner's profile at runtime"
+    ],
+    "answer": 1,
+    "explanation": "A scheduled report in Splunk runs under the security context of its owner. This means the search executes using the owner's roles, capabilities, and index access regardless of who later views the report output.",
+    "source": "Cleaned Community Bank"
+  },
+  {
+    "id": "b3-83",
+    "domain": "language",
+    "q": "When writing searches in Splunk, which of the following is true about booleans?",
+    "options": [
+      "they must be lowerase",
+      "they must be uppercase",
+      "they must be in quotations",
+      "they must be in parentheses"
+    ],
+    "answer": 1,
+    "explanation": "In Splunk search processing language, boolean operators such as and or, and not must be written in uppercase for the search parser to interpret them correctly. Lowercase boolean keywords are treated as literal search terms instead of logical operators.",
+    "source": "Cleaned Community Bank"
+  },
+  {
+    "id": "b3-84",
+    "domain": "searching",
+    "q": "Which search returns failure events from index netfw, or warn/critical events from index netops?",
+    "options": [
+      "index=netfw failure OR index=netops warn OR critical",
+      "(index=netfw failure) OR (index=netops (warn OR critical))",
+      "index=netfw (failure OR index=netops) (warn OR critical)",
+      "index=netfw AND failure AND index=netops AND warn AND critical"
+    ],
+    "answer": 1,
+    "explanation": "The parenthesis explicitly control boolean precedence. So the or conditions apply exactly as described in the question.",
+    "source": "Cleaned Community Bank"
+  },
+  {
+    "id": "b3-85",
+    "domain": "transforming",
+    "q": "Which search places the pipe correctly before a transforming command?",
+    "options": [
+      "index=main stats | count BY host",
+      "index=main error | stats count BY host",
+      "| index=main error stats count BY host",
+      "index=main | error stats count BY host"
+    ],
+    "answer": 1,
+    "explanation": "All search criteria come before the pipe and the stats command with its arguments come after it.",
+    "source": "Cleaned Community Bank"
+  },
+  {
+    "id": "b3-86",
+    "domain": "transforming",
+    "q": "Which of the following constraints can be used with the top command?",
+    "options": [
+      "Limit",
+      "Use perk",
+      "Add totals",
+      "field count"
+    ],
+    "answer": 0,
+    "explanation": "The top command in Splunk supports the limit constraint to control how many values are returned in the results. This is commonly used to restrict output to the top end values for a given field.",
+    "source": "Cleaned Community Bank"
+  },
+  {
+    "id": "b3-87",
+    "domain": "language",
+    "q": "When running searches, command modifiers in the search string are displayed in what color?",
+    "options": [
+      "red,",
+      "blue,",
+      "orange,",
+      "highlighted"
+    ],
+    "answer": 2,
+    "explanation": "In the Splunk search processing language editor, command modifiers such as by, as over, and where are syntax highlighted in orange to distinguish them from commands, fields, strings, and operators.",
+    "source": "Cleaned Community Bank"
+  },
+  {
+    "id": "b3-88",
+    "domain": "reports",
+    "q": "Which of the following represents the Splunk recommended naming convention for dashboards?",
+    "options": [
+      "description group object",
+      "Group description object",
+      "group object description",
+      "object group description"
+    ],
+    "answer": 2,
+    "explanation": "Splunk recommends naming dashboards using the group object description format. This structure groups related dashboards together, clearly identifies what the dashboard is about, and then provides additional descriptive detail. It improves organization, searchability, and consistency in environments with many dashboards.",
+    "source": "Cleaned Community Bank"
+  },
+  {
+    "id": "b3-89",
+    "domain": "searching",
+    "q": "Which of the following is a Splunk search best practice?",
+    "options": [
+      "Filter as early as possible",
+      "Never specify greater than one index",
+      "Include as few search terms as possible",
+      "Use wild cards to return more search results"
+    ],
+    "answer": 0,
+    "explanation": "Applying filters early in the search reduces the volume of data that Splunk needs to scan and process. This improves search performance, lowers resource consumption, and is a core best practice when writing efficient Splunk searches.",
+    "source": "Cleaned Community Bank"
+  }
+]
 };

@@ -379,33 +379,16 @@ code, pre, textarea { font-family: "SFMono-Regular", Consolas, "Liberation Mono"
   *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; }
 }
 
-/* v1.1 mock exam expansion */
-.quiz-launcher { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-.mode-card { min-height: 300px; }
-.cyber-card {
-  background: linear-gradient(150deg, rgba(88, 211, 230, .13), rgba(16, 31, 49, .98));
+/* Mock Exam Bank 3 */
+.quiz-launcher { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.bank-card {
   border-color: rgba(88, 211, 230, .42);
+  background: linear-gradient(155deg, rgba(18, 55, 76, .95), rgba(11, 23, 39, .96));
 }
-.cyber-card .mode-tag { color: var(--cyan); }
-.coach-tip {
-  margin-top: 12px;
-  padding: 12px 14px;
-  border: 1px solid rgba(88, 211, 230, .28);
-  border-radius: 10px;
-  background: rgba(88, 211, 230, .08);
-  color: var(--text);
-  font-size: .82rem;
+.bank-card .mode-tag { color: var(--cyan); }
+@media (max-width: 1050px) {
+  .quiz-launcher { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
-.review-tags { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 12px; }
-.review-tags span {
-  padding: 4px 8px;
-  border: 1px solid var(--line);
-  border-radius: 999px;
-  color: var(--cyan);
-  font-size: .68rem;
-  font-weight: 800;
-  text-transform: capitalize;
-}
-@media (max-width: 760px) {
+@media (max-width: 680px) {
   .quiz-launcher { grid-template-columns: 1fr; }
 }

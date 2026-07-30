@@ -1,11 +1,11 @@
 # Changelog
 
-## v1.1.0
+## v1.2 — Mock Exam Bank 3
 
-- Added a separate Mock Exam 1 launcher.
-- Added Mock Exam 2 with 29 original exam-style questions.
-- Added 28-minute timing for Mock Exam 2.
-- Added CyberBoss review feedback, including why a selected option was wrong.
-- Added exam tips, difficulty labels, and topic tags.
-- Stored the exam name in local mock history.
-- Preserved quick diagnostic, domain drills, progress tracking, and Mock Exam 1 behavior.
+- Added a new 89-question mock exam bank from the cleaned Splunk question dataset.
+- Added a dedicated Mock Exam Bank 3 launcher card.
+- Generates a randomized 60-question, 57-minute exam on each attempt.
+- Uses domain-aware selection and randomized answer order.
+- Includes post-submission explanations and domain scoring.
+- Records Bank 3 attempts in mock history.
+- Updated the service-worker cache version.

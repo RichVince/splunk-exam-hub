@@ -1,4 +1,4 @@
-const CACHE_NAME = "splunk-exam-hub-v1";
+const CACHE_NAME = "splunk-exam-hub-v1.2-bank3";
 const APP_FILES = [
   "./",
   "./index.html",
