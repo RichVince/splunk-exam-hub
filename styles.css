@@ -378,17 +378,3 @@ code, pre, textarea { font-family: "SFMono-Regular", Consolas, "Liberation Mono"
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; }
 }
-
-/* Mock Exam Bank 3 */
-.quiz-launcher { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-.bank-card {
-  border-color: rgba(88, 211, 230, .42);
-  background: linear-gradient(155deg, rgba(18, 55, 76, .95), rgba(11, 23, 39, .96));
-}
-.bank-card .mode-tag { color: var(--cyan); }
-@media (max-width: 1050px) {
-  .quiz-launcher { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-}
-@media (max-width: 680px) {
-  .quiz-launcher { grid-template-columns: 1fr; }
-}

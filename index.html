@@ -1,12 +1,268 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Splunk Exam Hub">
-  <defs>
-    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#65d46e"/>
-      <stop offset="1" stop-color="#35a646"/>
-    </linearGradient>
-  </defs>
-  <rect width="64" height="64" rx="17" fill="#07111f"/>
-  <rect x="7" y="7" width="50" height="50" rx="14" fill="url(#g)"/>
-  <path d="M20 22l12 10-12 10" fill="none" stroke="#04110a" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M36 42h9" fill="none" stroke="#04110a" stroke-width="6" stroke-linecap="round"/>
-</svg>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#07111f">
+  <meta name="description" content="A complete five-day Splunk Core Certified User study hub with lessons, SPL practice, quizzes, a timed mock exam, and progress tracking.">
+  <title>Splunk Core User Exam Hub</title>
+  <link rel="icon" href="./favicon.svg" type="image/svg+xml">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to study content</a>
+
+  <header class="site-header" id="top">
+    <div class="nav-shell">
+      <a class="brand" href="#home" aria-label="Splunk Core User Exam Hub home">
+        <span class="brand-mark" aria-hidden="true">S&gt;</span>
+        <span>
+          <strong>Splunk Exam Hub</strong>
+          <small>Core Certified User</small>
+        </span>
+      </a>
+      <button class="menu-button" id="menu-button" type="button" aria-expanded="false" aria-controls="site-nav">
+        <span></span><span></span><span></span><span class="sr-only">Toggle navigation</span>
+      </button>
+      <nav class="site-nav" id="site-nav" aria-label="Primary navigation">
+        <a href="#plan">5-Day Plan</a>
+        <a href="#lessons">Lessons</a>
+        <a href="#spl-lab">SPL Lab</a>
+        <a href="#quiz">Practice</a>
+        <a href="#review">Final Review</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main-content">
+    <section class="hero section" id="home">
+      <div class="hero-grid shell">
+        <div class="hero-copy reveal">
+          <span class="eyebrow"><span class="status-dot"></span> Five-day certification sprint</span>
+          <h1>Turn machine data into <span>exam-day confidence.</span></h1>
+          <p class="hero-lead">Learn Splunk by doing it: short lessons, realistic SPL searches, original exam-style questions, and a 60-question timed mock aligned to the current Core User blueprint.</p>
+          <div class="hero-actions">
+            <a class="button primary" href="#plan">Start Day 1 <span aria-hidden="true">→</span></a>
+            <a class="button secondary" href="#quiz">Take a quick diagnostic</a>
+          </div>
+          <div class="exam-facts" aria-label="Exam facts">
+            <div><strong>60</strong><span>questions</span></div>
+            <div><strong>57</strong><span>testing minutes</span></div>
+            <div><strong>8</strong><span>objective areas</span></div>
+          </div>
+        </div>
+
+        <aside class="readiness-card reveal" aria-labelledby="readiness-title">
+          <div class="card-topline">
+            <span id="readiness-title">Your readiness</span>
+            <span class="live-pill">Saved locally</span>
+          </div>
+          <div class="score-ring" id="score-ring" style="--score: 0">
+            <div><strong id="readiness-score">0%</strong><span>complete</span></div>
+          </div>
+          <div class="progress-copy">
+            <p><strong id="completed-count">0</strong> of <strong id="total-count">0</strong> study targets completed</p>
+            <div class="progress-track" aria-hidden="true"><span id="hero-progress"></span></div>
+          </div>
+          <div class="next-up" id="next-up">
+            <span>Next up</span>
+            <strong>Day 1 · Splunk foundations</strong>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="weight-strip" aria-label="Official exam domain weightings">
+      <div class="shell weighting-grid" id="weighting-grid"></div>
+    </section>
+
+    <section class="section shell" id="plan">
+      <div class="section-heading reveal">
+        <div>
+          <span class="eyebrow">Your path to exam day</span>
+          <h2>Five days. Clear targets. No guessing.</h2>
+        </div>
+        <p>Plan for four to five focused hours daily. Check off each task only after you can explain it without reading the answer.</p>
+      </div>
+      <div class="day-tabs" id="day-tabs" role="tablist" aria-label="Five-day study plan"></div>
+      <div class="day-panel reveal" id="day-panel" role="tabpanel"></div>
+    </section>
+
+    <section class="section section-tint" id="lessons">
+      <div class="shell">
+        <div class="section-heading reveal">
+          <div>
+            <span class="eyebrow">Blueprint lessons</span>
+            <h2>Master the eight tested domains.</h2>
+          </div>
+          <p>Each module includes plain-English explanations, exam traps, practice searches, and a hands-on task using your working <code>index=test</code>.</p>
+        </div>
+        <div class="lesson-grid" id="lesson-grid"></div>
+      </div>
+    </section>
+
+    <section class="section shell" id="spl-lab">
+      <div class="section-heading reveal">
+        <div>
+          <span class="eyebrow">Interactive SPL lab</span>
+          <h2>Practice searches without breaking anything.</h2>
+        </div>
+        <p>This learning simulator runs against built-in security events. Use the examples, change fields, and predict the output before pressing Run.</p>
+      </div>
+
+      <div class="lab-shell reveal">
+        <div class="lab-toolbar">
+          <div>
+            <span class="terminal-dot red"></span><span class="terminal-dot amber"></span><span class="terminal-dot green"></span>
+            <strong>SPL Practice Console</strong>
+          </div>
+          <span id="lab-event-count">18 sample events</span>
+        </div>
+        <div class="lab-main">
+          <aside class="search-recipes" aria-label="Practice search examples">
+            <h3>Try a search</h3>
+            <div id="lab-recipes"></div>
+          </aside>
+          <div class="console-area">
+            <label for="spl-input">Search Processing Language</label>
+            <div class="search-box">
+              <span aria-hidden="true">&gt;</span>
+              <textarea id="spl-input" rows="3" spellcheck="false">index=test | stats count BY status</textarea>
+              <button class="run-button" id="run-search" type="button">Run Search</button>
+            </div>
+            <div class="lab-hint" id="lab-hint">Tip: the pipe sends results to the next command.</div>
+            <div class="result-toolbar">
+              <div class="result-tabs" role="tablist" aria-label="Search results views">
+                <button class="active" type="button" data-result-view="table">Statistics</button>
+                <button type="button" data-result-view="events">Events</button>
+              </div>
+              <span id="result-summary">0 results</span>
+            </div>
+            <div class="results-wrap" id="lab-results" tabindex="0" aria-live="polite"></div>
+          </div>
+        </div>
+      </div>
+      <p class="lab-disclaimer">The simulator supports the Core User commands taught here. Run the same searches in Splunk Enterprise for the full product experience.</p>
+    </section>
+
+    <section class="section section-tint" id="quiz">
+      <div class="shell">
+        <div class="section-heading reveal">
+          <div>
+            <span class="eyebrow">Practice and prove it</span>
+            <h2>Test your knowledge under exam conditions.</h2>
+          </div>
+          <p>Questions are original practice items—not copied exam questions. Mock-exam answers remain hidden until you submit.</p>
+        </div>
+
+        <div class="quiz-launcher reveal" id="quiz-launcher">
+          <article class="mode-card featured">
+            <span class="mode-tag">Recommended first</span>
+            <h3>Quick diagnostic</h3>
+            <p>Ten mixed questions to expose your strongest and weakest domains.</p>
+            <div class="mode-meta"><span>10 questions</span><span>Untimed</span></div>
+            <button class="button primary quiz-start" type="button" data-mode="quick">Start diagnostic</button>
+          </article>
+          <article class="mode-card">
+            <span class="mode-tag">Target a weakness</span>
+            <h3>Domain drill</h3>
+            <p>Choose one blueprint area and complete a focused question set.</p>
+            <label for="domain-select">Choose domain</label>
+            <select id="domain-select"></select>
+            <button class="button secondary quiz-start" type="button" data-mode="domain">Start domain drill</button>
+          </article>
+          <article class="mode-card danger-card">
+            <span class="mode-tag">Exam simulation</span>
+            <h3>Full mock exam</h3>
+            <p>Sixty weighted questions with an accurate 57-minute countdown.</p>
+            <div class="mode-meta"><span>60 questions</span><span>57 minutes</span></div>
+            <button class="button danger quiz-start" type="button" data-mode="mock">Start full mock</button>
+          </article>
+        </div>
+
+        <div class="quiz-app hidden" id="quiz-app" aria-live="polite">
+          <div class="quiz-header">
+            <div>
+              <span id="quiz-mode-label">Practice</span>
+              <strong id="quiz-progress-label">Question 1 of 10</strong>
+            </div>
+            <div class="quiz-timer hidden" id="quiz-timer" aria-label="Time remaining">57:00</div>
+            <button class="text-button" id="exit-quiz" type="button">Exit</button>
+          </div>
+          <div class="quiz-progress"><span id="quiz-progress-bar"></span></div>
+          <div class="quiz-layout">
+            <div class="question-card" id="question-card"></div>
+            <aside class="question-navigator" id="question-navigator" aria-label="Question navigator"></aside>
+          </div>
+          <div class="quiz-controls">
+            <button class="button secondary" id="previous-question" type="button">Previous</button>
+            <button class="button primary" id="next-question" type="button">Next</button>
+            <button class="button danger hidden" id="submit-quiz" type="button">Submit answers</button>
+          </div>
+        </div>
+
+        <div class="quiz-results hidden" id="quiz-results"></div>
+      </div>
+    </section>
+
+    <section class="section shell" id="review">
+      <div class="section-heading reveal">
+        <div>
+          <span class="eyebrow">Final review</span>
+          <h2>Your exam-ready checklist.</h2>
+        </div>
+        <p>You are ready when these are true and you have scored at least 85% on two timed mock attempts.</p>
+      </div>
+      <div class="review-grid">
+        <div class="checklist-card reveal">
+          <div class="checklist-header">
+            <div><span>Readiness checklist</span><strong id="checklist-progress">0 / 0</strong></div>
+            <button class="text-button" id="reset-progress" type="button">Reset progress</button>
+          </div>
+          <div id="final-checklist"></div>
+        </div>
+        <aside class="pocket-card reveal">
+          <span class="eyebrow">SPL pocket reference</span>
+          <h3>Commands to know cold</h3>
+          <div id="pocket-reference"></div>
+          <a class="button primary download-button" href="./downloads/Splunk_Core_User_Offline_Study_Guide.pdf" download>Download the offline guide</a>
+        </aside>
+      </div>
+    </section>
+
+    <section class="source-strip">
+      <div class="shell">
+        <div>
+          <strong>Built against the current official blueprint.</strong>
+          <span>Use this hub with hands-on practice in Splunk Enterprise.</span>
+        </div>
+        <div class="source-links">
+          <a href="https://www.splunk.com/en_us/pdfs/training/splunk-test-blueprint-user.pdf" target="_blank" rel="noreferrer">Exam blueprint ↗</a>
+          <a href="https://help.splunk.com/" target="_blank" rel="noreferrer">Splunk Help ↗</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="shell">
+      <div class="brand footer-brand"><span class="brand-mark" aria-hidden="true">S&gt;</span><span><strong>Splunk Exam Hub</strong><small>Core Certified User</small></span></div>
+      <p>Original study content for certification preparation. Not affiliated with or endorsed by Splunk.</p>
+      <a href="#top">Back to top ↑</a>
+    </div>
+  </footer>
+
+  <dialog class="lesson-dialog" id="lesson-dialog" aria-labelledby="lesson-dialog-title">
+    <div class="dialog-shell">
+      <button class="dialog-close" id="dialog-close" type="button" aria-label="Close lesson">×</button>
+      <div id="lesson-dialog-content"></div>
+    </div>
+  </dialog>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="./data.js"></script>
+  <script src="./app.js"></script>
+</body>
+</html>
