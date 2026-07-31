@@ -204,7 +204,7 @@ code, pre, textarea { font-family: "SFMono-Regular", Consolas, "Liberation Mono"
 .empty-result { display: grid; place-items: center; min-height: 280px; color: var(--muted); text-align: center; padding: 30px; }
 .lab-disclaimer { margin: 12px 0 0; color: var(--muted); font-size: .72rem; }
 
-.quiz-launcher { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.quiz-launcher { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
 .mode-card { display: flex; flex-direction: column; min-height: 330px; padding: 26px; border: 1px solid var(--line); border-radius: 20px; background: var(--panel); }
 .mode-card.featured { background: linear-gradient(150deg, rgba(77,184,72,.15), var(--panel)); border-color: rgba(101,212,110,.42); }
 .danger-card { background: linear-gradient(150deg, rgba(255,107,107,.11), var(--panel)); }
@@ -390,5 +390,12 @@ code, pre, textarea { font-family: "SFMono-Regular", Consolas, "Liberation Mono"
 @media (max-width: 560px) {
   .review-heading { display: block; }
   .review-status { display: inline-block; margin-bottom: 8px; }
+}
+
+
+.mock-two-card { background: linear-gradient(150deg, rgba(88,211,230,.12), var(--panel)); border-color: rgba(88,211,230,.42); }
+.mock-two-card .mode-tag { color: var(--cyan); }
+@media (max-width: 800px) {
+  .quiz-launcher { grid-template-columns: 1fr; }
 }
 

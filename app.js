@@ -564,11 +564,11 @@
     $("#domain-select").innerHTML = DATA.domains.map((domain) => `<option value="${domain.id}">${escapeHtml(domain.name)}</option>`).join("");
   }
 
-  function selectMockQuestions() {
+  function selectMockQuestions(pool) {
     const quotas = { basics: 3, searching: 13, fields: 12, language: 9, transforming: 9, reports: 7, lookups: 4, alerts: 3 };
     const selected = [];
     Object.entries(quotas).forEach(([domain, count]) => {
-      selected.push(...shuffle(DATA.questionBank.filter((question) => question.domain === domain)).slice(0, count));
+      selected.push(...shuffle(pool.filter((question) => question.domain === domain)).slice(0, count));
     });
     return shuffle(selected);
   }
@@ -594,13 +594,18 @@
       const domainId = $("#domain-select").value;
       questions = shuffle(DATA.questionBank.filter((question) => question.domain === domainId));
       label = `${domainById(domainId).name} drill`;
+    } else if (mode === "mock2") {
+      questions = shuffle(DATA.questionBank.filter((question) => question.id >= 76));
+      label = "Mock Exam 2 · New 89-question bank";
     } else {
-      questions = selectMockQuestions();
-      label = "Full mock exam";
+      const originalBank = DATA.questionBank.filter((question) => question.id <= 75);
+      questions = selectMockQuestions(originalBank);
+      label = "Mock Exam 1 · Original bank";
     }
 
     questions = randomizeQuestionOptions(questions);
 
+    const durationMinutes = mode === "mock2" ? 85 : mode === "mock" ? 57 : null;
     quizState = {
       mode,
       label,
@@ -608,7 +613,7 @@
       index: 0,
       answers: {},
       startedAt: Date.now(),
-      endAt: mode === "mock" ? Date.now() + (57 * 60 * 1000) : null,
+      endAt: durationMinutes ? Date.now() + (durationMinutes * 60 * 1000) : null,
       timerId: null
     };
 
@@ -616,8 +621,8 @@
     $("#quiz-results").classList.add("hidden");
     $("#quiz-app").classList.remove("hidden");
     $("#quiz-mode-label").textContent = label;
-    $("#quiz-timer").classList.toggle("hidden", mode !== "mock");
-    if (mode === "mock") {
+    $("#quiz-timer").classList.toggle("hidden", !durationMinutes);
+    if (durationMinutes) {
       updateTimer();
       quizState.timerId = setInterval(updateTimer, 250);
     }
@@ -695,7 +700,7 @@
     const elapsed = Math.round((Date.now() - quizState.startedAt) / 1000);
     const snapshot = { ...quizState, answers: { ...quizState.answers } };
 
-    if (snapshot.mode === "mock") {
+    if (snapshot.mode === "mock" || snapshot.mode === "mock2") {
       state.mockHistory.push({ date: new Date().toISOString(), percent, correct, total: snapshot.questions.length, elapsed });
       state.mockHistory = state.mockHistory.slice(-10);
       saveState();
@@ -849,4 +854,5 @@
 
   init();
 })();
+
 

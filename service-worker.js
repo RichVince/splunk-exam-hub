@@ -1,4 +1,4 @@
-const CACHE_NAME = "splunk-exam-hub-v2-review-89";
+const CACHE_NAME = "splunk-exam-hub-v3-mock2";
 const APP_FILES = [
   "./",
   "./index.html",
@@ -32,4 +32,5 @@ self.addEventListener("fetch", (event) => {
     }).catch(() => caches.match("./index.html")))
   );
 });
+
 
