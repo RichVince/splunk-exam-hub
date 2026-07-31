@@ -714,7 +714,8 @@
       const correct = questions.filter((question) => snapshot.answers[question.id] === question.answer).length;
       return { domain, correct, total: questions.length, percent: Math.round((correct / questions.length) * 100) };
     }).filter(Boolean);
-    const missed = snapshot.questions.filter((question) => snapshot.answers[question.id] !== question.answer);
+    const reviewItems = snapshot.questions;
+    const missed = reviewItems.filter((question) => snapshot.answers[question.id] !== question.answer);
     const minutes = Math.floor(result.elapsed / 60);
     const seconds = result.elapsed % 60;
     let headline = result.percent >= 85 ? "Strong exam-ready performance" : result.percent >= 70 ? "Close—repair the weak domains" : "Rebuild the foundations before retesting";
@@ -736,18 +737,23 @@
           </div>
         `).join("")}
       </div>
-      <h3>${missed.length ? "Review missed and unanswered questions" : "Perfect score"}</h3>
-      ${missed.length ? missed.map((question) => {
+      <h3>Answer review — all questions</h3>
+      <p class="review-intro">Explanations are shown only after the test is submitted.</p>
+      ${reviewItems.map((question, index) => {
         const chosen = snapshot.answers[question.id];
+        const isCorrect = chosen === question.answer;
         return `
-          <div class="review-answer">
-            <h4>${escapeHtml(question.q)}</h4>
+          <div class="review-answer ${isCorrect ? "correct" : "incorrect"}">
+            <div class="review-heading">
+              <h4>Question ${index + 1}: ${escapeHtml(question.q)}</h4>
+              <span class="review-status ${isCorrect ? "correct" : "incorrect"}">${isCorrect ? "✓ Correct" : chosen === undefined ? "— Unanswered" : "✕ Incorrect"}</span>
+            </div>
             <p><strong>Your answer:</strong> ${chosen === undefined ? "Unanswered" : `${String.fromCharCode(65 + chosen)}. ${escapeHtml(question.options[chosen])}`}</p>
             <p><strong>Correct answer:</strong> ${String.fromCharCode(65 + question.answer)}. ${escapeHtml(question.options[question.answer])}</p>
-            <p><strong>Why:</strong> ${escapeHtml(question.explanation)}</p>
+            <p class="review-explanation"><strong>Explanation:</strong> ${escapeHtml(question.explanation)}</p>
           </div>
         `;
-      }).join("") : `<div class="review-answer correct"><p>You answered every question correctly. Move to a harder mode or repeat the timed mock with a fresh question order.</p></div>`}
+      }).join("")}
       <div class="dialog-actions">
         <span>Review explanations before starting another attempt.</span>
         <button class="button primary" type="button" id="return-to-quizzes">Choose another quiz</button>
@@ -843,3 +849,4 @@
 
   init();
 })();
+

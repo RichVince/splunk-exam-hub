@@ -378,3 +378,17 @@ code, pre, textarea { font-family: "SFMono-Regular", Consolas, "Liberation Mono"
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; }
 }
+
+.review-intro { margin: -5px 0 18px; color: var(--muted); font-size: .82rem; }
+.review-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
+.review-heading h4 { flex: 1; }
+.review-status { flex: 0 0 auto; padding: 4px 9px; border-radius: 999px; font-size: .7rem; font-weight: 900; letter-spacing: .03em; }
+.review-status.correct { background: rgba(101,212,110,.12); color: var(--green); }
+.review-status.incorrect { background: rgba(255,107,107,.12); color: #ff8d85; }
+.review-answer.incorrect { border-left-color: var(--red); }
+.review-explanation { margin-top: 10px !important; padding-top: 10px; border-top: 1px solid rgba(159,176,194,.12); color: #d8e5ef !important; }
+@media (max-width: 560px) {
+  .review-heading { display: block; }
+  .review-status { display: inline-block; margin-bottom: 8px; }
+}
+
