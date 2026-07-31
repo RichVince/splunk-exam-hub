@@ -660,7 +660,7 @@
     $("#previous-question").disabled = quizState.index === 0;
     const atEnd = quizState.index === quizState.questions.length - 1;
     $("#next-question").classList.toggle("hidden", atEnd);
-    $("#submit-quiz").classList.toggle("hidden", !atEnd);
+    $("#submit-quiz").classList.remove("hidden");
     renderQuestionNavigator();
   }
 
@@ -854,5 +854,4 @@
 
   init();
 })();
-
 
